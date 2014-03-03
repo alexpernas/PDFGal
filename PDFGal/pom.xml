@@ -8,11 +8,27 @@
   <name>PDFGal</name>
   <url>http://maven.apache.org</url>
   <dependencies>
+  	
+  	<!-- ****** -->
+  	<!-- Apache -->
+  	<!-- ****** -->
+  	
+  	<!-- PDFBox -->
+  	<dependency>
+		<groupId>org.apache.pdfbox</groupId>
+		<artifactId>pdfbox</artifactId>
+		<version>1.8.3</version>
+	</dependency>
+  
+  
+  	<!-- ***** -->
   	<!-- JUnit -->
+  	<!-- ***** -->
     <dependency>
 		<groupId>junit</groupId>
 		<artifactId>junit</artifactId>
 		<version>4.11</version>
 	</dependency>
+	
   </dependencies>
 </project>
