@@ -1,6 +1,9 @@
 package org.pdfgal.pdfgal.pdfgal;
 
+import java.io.IOException;
 import java.util.List;
+
+import org.apache.pdfbox.pdmodel.encryption.BadSecurityHandlerException;
 
 public interface PDFGal {
 	
@@ -34,7 +37,9 @@ public interface PDFGal {
 	 * @param inputUri
 	 * @param outputUri
 	 * @param password
+	 * @throws IOException 
+	 * @throws BadSecurityHandlerException 
 	 */
-	public void protect(String inputUri, String outputUri, String password);
+	public void protect(String inputUri, String outputUri, String password) throws IOException, BadSecurityHandlerException;
 
 }
