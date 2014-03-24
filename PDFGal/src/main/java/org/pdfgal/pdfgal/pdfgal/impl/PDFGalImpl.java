@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.encryption.AccessPermission;
 import org.apache.pdfbox.pdmodel.encryption.BadSecurityHandlerException;
@@ -25,7 +26,7 @@ public class PDFGalImpl implements PDFGal {
 	}
 
 	@Override
-	public void protect(String inputUri, String outputUri, String password) throws IOException, BadSecurityHandlerException {
+	public void protect(String inputUri, String outputUri, String password) throws IOException, BadSecurityHandlerException, COSVisitorException {
 		
 		if(StringUtils.isNotBlank(inputUri) && StringUtils.isNotBlank(outputUri) &&
 				StringUtils.isNotBlank(password)){
@@ -35,10 +36,14 @@ public class PDFGalImpl implements PDFGal {
 		StandardProtectionPolicy pp = new StandardProtectionPolicy(password, password, new AccessPermission());
 		doc.protect(pp);
 		
-		// TODO Auto-generated method stub
+		doc.save(outputUri);
 		
 		}
-		
+	}
+	
+	@Override
+	public void unProtect(String inputUri, String outputUri, String password){
+		//TODO
 	}
 
 }
