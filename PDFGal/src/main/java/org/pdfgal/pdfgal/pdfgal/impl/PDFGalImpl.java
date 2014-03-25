@@ -5,9 +5,12 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.exceptions.COSVisitorException;
+import org.apache.pdfbox.exceptions.CryptographyException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.encryption.AccessPermission;
 import org.apache.pdfbox.pdmodel.encryption.BadSecurityHandlerException;
+import org.apache.pdfbox.pdmodel.encryption.DecryptionMaterial;
+import org.apache.pdfbox.pdmodel.encryption.StandardDecryptionMaterial;
 import org.apache.pdfbox.pdmodel.encryption.StandardProtectionPolicy;
 import org.pdfgal.pdfgal.pdfgal.PDFGal;
 
@@ -26,7 +29,8 @@ public class PDFGalImpl implements PDFGal {
 	}
 
 	@Override
-	public void protect(String inputUri, String outputUri, String password) throws IOException, BadSecurityHandlerException, COSVisitorException {
+	public void protect(String inputUri, String outputUri, String password) 
+			throws IOException, BadSecurityHandlerException, COSVisitorException {
 		
 		if(StringUtils.isNotBlank(inputUri) && StringUtils.isNotBlank(outputUri) &&
 				StringUtils.isNotBlank(password)){
@@ -42,8 +46,19 @@ public class PDFGalImpl implements PDFGal {
 	}
 	
 	@Override
-	public void unProtect(String inputUri, String outputUri, String password){
-		//TODO
+	public void unProtect(String inputUri, String outputUri, String password) 
+			throws IOException, COSVisitorException, BadSecurityHandlerException, CryptographyException{
+
+		if(StringUtils.isNotBlank(inputUri) && StringUtils.isNotBlank(outputUri) &&
+				StringUtils.isNotBlank(password)){
+			
+			PDDocument doc = PDDocument.load(inputUri);
+			
+			DecryptionMaterial decryptionMaterial = new StandardDecryptionMaterial(password);
+	        doc.openProtection(decryptionMaterial);
+			
+			doc.save(outputUri);
+		}
 	}
 
 }

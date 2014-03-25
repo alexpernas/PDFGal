@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.apache.pdfbox.exceptions.COSVisitorException;
+import org.apache.pdfbox.exceptions.CryptographyException;
 import org.apache.pdfbox.pdmodel.encryption.BadSecurityHandlerException;
 
 public interface PDFGal {
@@ -42,7 +43,8 @@ public interface PDFGal {
 	 * @throws BadSecurityHandlerException 
 	 * @throws COSVisitorException 
 	 */
-	public void protect(String inputUri, String outputUri, String password) throws IOException, BadSecurityHandlerException, COSVisitorException;
+	public void protect(String inputUri, String outputUri, String password) 
+			throws IOException, BadSecurityHandlerException, COSVisitorException;
 
 	/**
 	 * This method eliminates password protection into a PDF document. Parameter
@@ -52,7 +54,12 @@ public interface PDFGal {
 	 * @param inputUri
 	 * @param outputUri
 	 * @param password
+	 * @throws IOException 
+	 * @throws COSVisitorException 
+	 * @throws CryptographyException 
+	 * @throws BadSecurityHandlerException 
 	 */
-	public void unProtect(String inputUri, String outputUri, String password);
+	public void unProtect(String inputUri, String outputUri, String password) 
+			throws IOException, COSVisitorException, BadSecurityHandlerException, CryptographyException;
 
 }
