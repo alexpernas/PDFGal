@@ -26,6 +26,25 @@
 		<artifactId>commons-lang3</artifactId>
 		<version>3.3</version>
 	</dependency>
+	
+	
+	<!-- ****** -->
+	<!-- Spring -->
+	<!-- ****** -->
+	
+	<!-- Spring Context -->
+	<dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+        <version>4.0.2.RELEASE</version>
+    </dependency>
+    
+    <!-- Spring Test -->
+    <dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-test</artifactId>
+		<version>4.0.2.RELEASE</version>
+	</dependency>
   
   
   	<!-- ***** -->

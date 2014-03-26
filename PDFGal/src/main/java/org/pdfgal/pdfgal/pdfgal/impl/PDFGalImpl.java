@@ -13,7 +13,9 @@ import org.apache.pdfbox.pdmodel.encryption.DecryptionMaterial;
 import org.apache.pdfbox.pdmodel.encryption.StandardDecryptionMaterial;
 import org.apache.pdfbox.pdmodel.encryption.StandardProtectionPolicy;
 import org.pdfgal.pdfgal.pdfgal.PDFGal;
+import org.springframework.stereotype.Component;
 
+@Component
 public class PDFGalImpl implements PDFGal {
 
 	@Override
