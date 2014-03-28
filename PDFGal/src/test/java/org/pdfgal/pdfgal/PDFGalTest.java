@@ -36,7 +36,8 @@ public class PDFGalTest {
 	@Test
 	public void protect(){
 		
-		String inputUri = "/PDFGal/src/test/resources/test/protect/IProtectTest.pdf";
+		String inputUri = "/src/test/resources/test/protect/IProtectTest.pdf";
+//		String inputUri = "\\src\\test\\resources\\test\\protect\\IProtectTest.pdf";
 		String outputUri = "/PDFGal/src/test/resources/test/protect/OProtectTest.pdf";
 		String password = "coNtra$1nA1";
 		
