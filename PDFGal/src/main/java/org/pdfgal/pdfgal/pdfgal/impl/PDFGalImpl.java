@@ -18,19 +18,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class PDFGalImpl implements PDFGal {
 
-	@Override
 	public void merge(List<String> inputUris, String outputUri) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void split(String inputUri, String outputUri, List<Integer> pages) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void protect(String inputUri, String outputUri, String password) 
 			throws IOException, BadSecurityHandlerException, COSVisitorException {
 		
@@ -43,11 +40,9 @@ public class PDFGalImpl implements PDFGal {
 		doc.protect(pp);
 		
 		doc.save(outputUri);
-		
 		}
 	}
 	
-	@Override
 	public void unProtect(String inputUri, String outputUri, String password) 
 			throws IOException, COSVisitorException, BadSecurityHandlerException, CryptographyException{
 
@@ -58,6 +53,9 @@ public class PDFGalImpl implements PDFGal {
 			
 			DecryptionMaterial decryptionMaterial = new StandardDecryptionMaterial(password);
 	        doc.openProtection(decryptionMaterial);
+	        
+	        StandardProtectionPolicy pp = new StandardProtectionPolicy(null, null, new AccessPermission());
+			doc.protect(pp);
 			
 			doc.save(outputUri);
 		}

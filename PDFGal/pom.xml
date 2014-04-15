@@ -55,6 +55,18 @@
 		<artifactId>junit</artifactId>
 		<version>4.11</version>
 	</dependency>
+  
+  
+  	<!-- *************************** -->
+  	<!-- Legion of the Bouncy Castle -->
+  	<!-- *************************** -->
+	
+	<!-- Bouncy Castle Provider -->
+	<dependency>
+  		<groupId>org.bouncycastle</groupId>
+		<artifactId>bcprov-jdk15</artifactId>
+  		<version>1.44</version>
+	</dependency>
 	
   </dependencies>
 </project>
