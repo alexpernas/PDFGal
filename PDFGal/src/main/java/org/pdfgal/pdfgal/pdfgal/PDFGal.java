@@ -16,8 +16,10 @@ public interface PDFGal {
 	 * resultant PDF must be stored.
 	 * @param inputUris
 	 * @param outputUri
+	 * @throws IOException 
+	 * @throws COSVisitorException 
 	 */
-	public void merge(List<String> inputUris, String outputUri);
+	public void merge(List<String> inputUris, String outputUri) throws COSVisitorException, IOException;
 	
 	/**
 	 * This method splits PDFs. Parameter inputUri must contain the URI where the
