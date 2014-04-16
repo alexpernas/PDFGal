@@ -30,8 +30,10 @@ public interface PDFGal {
 	 * @param inputUri
 	 * @param outputUri
 	 * @param pages
+	 * @throws IOException 
+	 * @throws COSVisitorException 
 	 */
-	public void split(String inputUri, String outputUri, List<Integer> pages);
+	public void split(String inputUri, String outputUri, List<Integer> pages) throws IOException, COSVisitorException;
 	
 	/**
 	 * This method password protects a PDF document. Parameter inputUri must

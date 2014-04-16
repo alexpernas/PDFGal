@@ -14,14 +14,20 @@ import org.apache.pdfbox.pdmodel.encryption.DecryptionMaterial;
 import org.apache.pdfbox.pdmodel.encryption.StandardDecryptionMaterial;
 import org.apache.pdfbox.pdmodel.encryption.StandardProtectionPolicy;
 import org.apache.pdfbox.util.PDFMergerUtility;
+import org.apache.pdfbox.util.Splitter;
 import org.pdfgal.pdfgal.pdfgal.PDFGal;
 import org.pdfgal.pdfgal.utils.Constants;
+import org.pdfgal.pdfgal.utils.ConverterUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PDFGalImpl implements PDFGal {
+	
+	@Autowired
+	ConverterUtils converterUtils;
 
-	public void merge(List<String> inputUris, String outputUri) throws COSVisitorException, IOException {//TODO Crear excepcións propias
+	public void merge(List<String> inputUris, String outputUri) throws COSVisitorException, IOException {
 		
 		if(CollectionUtils.isNotEmpty(inputUris) && StringUtils.isNotBlank(outputUri)){
 			
@@ -39,9 +45,29 @@ public class PDFGalImpl implements PDFGal {
 		}
 	}
 
-	public void split(String inputUri, String outputUri, List<Integer> pages) {
-		// TODO Auto-generated method stub
+	public void split(String inputUri, String outputUri, List<Integer> pages) throws IOException, COSVisitorException {
 		
+		if(StringUtils.isNotBlank(inputUri) && StringUtils.isNotBlank(outputUri) &&
+				CollectionUtils.isNotEmpty(pages)){
+			
+			PDDocument doc = PDDocument.load(inputUri);
+			
+			Splitter splitter = new Splitter();
+			
+			for(Integer page : pages){
+				splitter.setSplitAtPage(page);
+			}
+			
+			List<PDDocument> splittedDocs = splitter.split(doc);
+			
+			Integer subIndex = 0;
+			for(PDDocument document : splittedDocs){
+				document.save(converterUtils.addSubIndexBeforeExtension(outputUri, subIndex++));
+			}
+			
+		}else{
+			throw new IllegalArgumentException(Constants.ILLEGAL_ARGUMENT_EXCEPTION_MESSAGE);
+		}
 	}
 
 	public void protect(String inputUri, String outputUri, String password) 

@@ -9,5 +9,6 @@
   http://www.springframework.org/schema/context/spring-context-4.0.xsd">
   
   <context:component-scan base-package="org.pdfgal.pdfgal.pdfgal.impl" />
+  <context:component-scan base-package="org.pdfgal.pdfgal.utils" />
 
 </beans>
