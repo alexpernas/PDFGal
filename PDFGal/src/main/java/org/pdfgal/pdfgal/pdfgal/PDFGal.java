@@ -23,7 +23,7 @@ public interface PDFGal {
 	
 	/**
 	 * This method splits PDFs. Parameter inputUri must contain the URI where the
-	 * input PDF is stored.Parameter outputUri indicates the URI where resultant PDF
+	 * input PDF is stored. Parameter outputUri indicates the URI where resultant PDF
 	 * must be stored. Parameter pages represents the list of pages, each element
 	 * of this list indicates the first page of each resultant PDF (the first
 	 * page of the first PDF should not be indicated).
@@ -34,6 +34,19 @@ public interface PDFGal {
 	 * @throws COSVisitorException 
 	 */
 	public void split(String inputUri, String outputUri, List<Integer> pages) throws IOException, COSVisitorException;
+	
+	/**
+	 * This method splits PDFs. Parameter inputUri must contain the URI where the
+	 * input PDF is stored. Parameter outputUri indicates the URI where resultant PDF
+	 * must be stored. Parameter pages represents the number of pages each resultant
+	 * document contains (last document may contain less than indicated pages).
+	 * @param inputUri
+	 * @param outputUri
+	 * @param pages
+	 * @throws IOException 
+	 * @throws COSVisitorException 
+	 */
+	public void split(String inputUri, String outputUri, Integer pages) throws IOException, COSVisitorException;
 	
 	/**
 	 * This method password protects a PDF document. Parameter inputUri must

@@ -29,7 +29,7 @@ public class ConverterUtils {
 			sb.append(uri.substring(0, lengthWithoutExtension));
 			sb.append("_");
 			sb.append(subIndex);
-			sb.append(uri.substring(lengthWithoutExtension - 1));
+			sb.append(uri.substring(lengthWithoutExtension));
 			result = sb.toString();
 			
 		}else{

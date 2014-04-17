@@ -1,15 +1,15 @@
 package org.pdfgal.pdfgal;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.common.PDStream;
 import org.apache.pdfbox.pdmodel.encryption.StandardDecryptionMaterial;
+import org.apache.pdfbox.util.PDFTextStripper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.pdfgal.pdfgal.pdfgal.PDFGal;
@@ -31,7 +31,6 @@ public class PDFGalTest {
 	
 	public static final String TEST_RESOURCES = "\\src\\test\\resources\\test\\";
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void merge(){
 		
@@ -59,58 +58,266 @@ public class PDFGalTest {
 			PDDocument inputDoc5 = PDDocument.load(inputUri5);
 			PDDocument outputDoc = PDDocument.load(outputUri);
 			
-			List<PDPage> inputDoc1Pages = inputDoc1.getDocumentCatalog().getAllPages();
-			List<PDPage> inputDoc2Pages = inputDoc2.getDocumentCatalog().getAllPages();
-			List<PDPage> inputDoc3Pages = inputDoc3.getDocumentCatalog().getAllPages();
-			List<PDPage> inputDoc4Pages = inputDoc4.getDocumentCatalog().getAllPages();
-			List<PDPage> inputDoc5Pages = inputDoc5.getDocumentCatalog().getAllPages();
-			List<PDPage> outputDocPages = outputDoc.getDocumentCatalog().getAllPages();
+			Integer inputDoc1Size = inputDoc1.getNumberOfPages();
+			Integer inputDoc2Size = inputDoc2.getNumberOfPages();
+			Integer inputDoc3Size = inputDoc3.getNumberOfPages();
+			Integer inputDoc4Size = inputDoc4.getNumberOfPages();
+			Integer inputDoc5Size = inputDoc5.getNumberOfPages();
 			
-			Integer inputDocsPagesTotal = inputDoc1Pages.size() + inputDoc2Pages.size() +
-					inputDoc3Pages.size() + inputDoc4Pages.size() + inputDoc5Pages.size(); 
-			assertEquals(new Integer(outputDocPages.size()), inputDocsPagesTotal);
+			Integer inputDocsPagesTotal = inputDoc1Size + inputDoc2Size + inputDoc3Size + inputDoc4Size + inputDoc5Size; 
+			assertEquals(new Integer(outputDoc.getNumberOfPages()), inputDocsPagesTotal);
 			
-			for(PDPage outputPage : outputDocPages){
-				
-				PDStream outputPageContents = outputPage.getContents();
-				PDStream inputPageContents = null;
-				
-				if(CollectionUtils.isNotEmpty(inputDoc1Pages)){
-//					assertEquals(outputPage, inputDoc1Pages.get(0));
-					inputPageContents = inputDoc1Pages.get(0).getContents();//TODO
-					assertEquals(outputPageContents, inputPageContents);
-					inputDoc1Pages.remove(0);
-					
-				}else if(CollectionUtils.isNotEmpty(inputDoc2Pages)){
-					assertEquals(outputPage, inputDoc2Pages.get(0));//TODO
-					inputDoc2Pages.remove(0);
-					
-				}else if(CollectionUtils.isNotEmpty(inputDoc3Pages)){
-					assertEquals(outputPage, inputDoc3Pages.get(0));//TODO
-					inputDoc3Pages.remove(0);
-					
-				}else if(CollectionUtils.isNotEmpty(inputDoc4Pages)){
-					assertEquals(outputPage, inputDoc4Pages.get(0));//TODO
-					inputDoc4Pages.remove(0);
-					
-				}else if(CollectionUtils.isNotEmpty(inputDoc5Pages)){
-					assertEquals(outputPage, inputDoc5Pages.get(0));//TODO
-					inputDoc5Pages.remove(0);
-					
-				}
-			}
+			PDFTextStripper pdfStripper = new PDFTextStripper();
+			String inputText = null;
+			String outputText = null;
+			Integer lastOutputPage = null;
+			
+			/* Let's compare the first document */
+			//Extraction of output text
+			lastOutputPage = inputDoc1Size;
+			pdfStripper.setStartPage(1);
+			pdfStripper.setEndPage(lastOutputPage);
+			outputText = pdfStripper.getText(outputDoc);
+			//Extraction of input text
+			pdfStripper.setStartPage(1);
+			pdfStripper.setEndPage(inputDoc1Size);
+			inputText = pdfStripper.getText(inputDoc1);
+			//Comparison of output and input text
+			assertEquals(outputText, inputText);
+			
+			/* Let's compare the second document */
+			//Extraction of output text
+			pdfStripper.setStartPage(lastOutputPage + 1);
+			lastOutputPage = lastOutputPage + inputDoc2Size;
+			pdfStripper.setEndPage(lastOutputPage);
+			outputText = pdfStripper.getText(outputDoc);
+			//Extraction of input text
+			pdfStripper.setStartPage(1);
+			pdfStripper.setEndPage(inputDoc2Size);
+			inputText = pdfStripper.getText(inputDoc2);
+			//Comparison of output and input text
+			assertEquals(outputText, inputText);
+			
+			/* Let's compare the third document */
+			//Extraction of output text
+			pdfStripper.setStartPage(lastOutputPage + 1);
+			lastOutputPage = lastOutputPage + inputDoc3Size;
+			pdfStripper.setEndPage(lastOutputPage);
+			outputText = pdfStripper.getText(outputDoc);
+			//Extraction of input text
+			pdfStripper.setStartPage(1);
+			pdfStripper.setEndPage(inputDoc3Size);
+			inputText = pdfStripper.getText(inputDoc3);
+			//Comparison of output and input text
+			assertEquals(outputText, inputText);
+			
+			/* Let's compare the fourth document */
+			//Extraction of output text
+			pdfStripper.setStartPage(lastOutputPage + 1);
+			lastOutputPage = lastOutputPage + inputDoc4Size;
+			pdfStripper.setEndPage(lastOutputPage);
+			outputText = pdfStripper.getText(outputDoc);
+			//Extraction of input text
+			pdfStripper.setStartPage(1);
+			pdfStripper.setEndPage(inputDoc4Size);
+			inputText = pdfStripper.getText(inputDoc4);
+			//Comparison of output and input text
+			assertEquals(outputText, inputText);
+			
+			/* Let's compare the fifth document */
+			//Extraction of output text
+			pdfStripper.setStartPage(lastOutputPage + 1);
+			lastOutputPage = lastOutputPage + inputDoc5Size;
+			pdfStripper.setEndPage(lastOutputPage);
+			outputText = pdfStripper.getText(outputDoc);
+			//Extraction of input text
+			pdfStripper.setStartPage(1);
+			pdfStripper.setEndPage(inputDoc5Size);
+			inputText = pdfStripper.getText(inputDoc5);
+			//Comparison of output and input text
+			assertEquals(outputText, inputText);
 			
 		}catch(Exception e){
+			assertFalse(true);
+		}
+	}
+
+	
+	/**
+	 * Test for method PDFGal.split(String inputUri, String outputUri, List<Integer> pages) throws IOException, COSVisitorException;
+	 */
+	@Test
+	public void splitSettingPageNumber(){
+		
+		String inputUri = System.getProperty("user.dir") + TEST_RESOURCES + "splitlist\\ISplitListTest.pdf";
+		String outputUri = System.getProperty("user.dir") + TEST_RESOURCES + "splitlist\\OSplitListTest.pdf";
+		String outputUri1 = System.getProperty("user.dir") + TEST_RESOURCES + "splitlist\\OSplitListTest_1.pdf";
+		String outputUri2 = System.getProperty("user.dir") + TEST_RESOURCES + "splitlist\\OSplitListTest_2.pdf";
+		String outputUri3 = System.getProperty("user.dir") + TEST_RESOURCES + "splitlist\\OSplitListTest_3.pdf";
+		String outputUri4 = System.getProperty("user.dir") + TEST_RESOURCES + "splitlist\\OSplitListTest_4.pdf";
+		
+		List<Integer> pages = new ArrayList<Integer>();
+		pages.add(2);
+		pages.add(5);
+		pages.add(7);
+		
+		try {
+			pdfGal.split(inputUri, outputUri, pages);
+			
+			PDDocument outputDoc1 = PDDocument.load(outputUri1);
+			PDDocument outputDoc2 = PDDocument.load(outputUri2);
+			PDDocument outputDoc3 = PDDocument.load(outputUri3);
+			PDDocument outputDoc4 = PDDocument.load(outputUri4);
+			PDDocument inputDoc = PDDocument.load(inputUri);
+			
+			Integer outputDoc1Size = outputDoc1.getNumberOfPages();
+			Integer outputDoc2Size = outputDoc2.getNumberOfPages();
+			Integer outputDoc3Size = outputDoc3.getNumberOfPages();
+			Integer outputDoc4Size = outputDoc4.getNumberOfPages();
+			
+			Integer inputDocsPagesTotal = outputDoc1Size + outputDoc2Size + outputDoc3Size + outputDoc4Size; 
+			assertEquals(new Integer(inputDoc.getNumberOfPages()), inputDocsPagesTotal);
+			
+			PDFTextStripper pdfStripper = new PDFTextStripper();
+			String inputText = null;
+			String outputText = null;
+			Integer lastInputPage = null;
+			
+			/* Let's compare the first document */
+			//Extraction of input text
+			lastInputPage = outputDoc1Size;
+			pdfStripper.setStartPage(1);
+			pdfStripper.setEndPage(lastInputPage);
+			inputText = pdfStripper.getText(inputDoc);
+			//Extraction of output text
+			pdfStripper.setStartPage(1);
+			pdfStripper.setEndPage(outputDoc1Size);
+			outputText = pdfStripper.getText(outputDoc1);
+			//Comparison of output and input text
+			assertEquals(outputText, inputText);
+			
+			/* Let's compare the second document */
+			//Extraction of input text
+			pdfStripper.setStartPage(lastInputPage + 1);
+			lastInputPage = lastInputPage + outputDoc2Size;
+			pdfStripper.setEndPage(lastInputPage);
+			inputText = pdfStripper.getText(inputDoc);
+			//Extraction of output text
+			pdfStripper.setStartPage(1);
+			pdfStripper.setEndPage(outputDoc2Size);
+			outputText = pdfStripper.getText(outputDoc2);
+			//Comparison of output and input text
+			assertEquals(outputText, inputText);
+			
+			/* Let's compare the third document */
+			//Extraction of input text
+			pdfStripper.setStartPage(lastInputPage + 1);
+			lastInputPage = lastInputPage + outputDoc3Size;
+			pdfStripper.setEndPage(lastInputPage);
+			inputText = pdfStripper.getText(inputDoc);
+			//Extraction of output text
+			pdfStripper.setStartPage(1);
+			pdfStripper.setEndPage(outputDoc3Size);
+			outputText = pdfStripper.getText(outputDoc3);
+			//Comparison of output and input text
+			assertEquals(outputText, inputText);
+			
+			/* Let's compare the fourth document */
+			//Extraction of input text
+			pdfStripper.setStartPage(lastInputPage + 1);
+			lastInputPage = lastInputPage + outputDoc4Size;
+			pdfStripper.setEndPage(lastInputPage);
+			inputText = pdfStripper.getText(inputDoc);
+			//Extraction of output text
+			pdfStripper.setStartPage(1);
+			pdfStripper.setEndPage(outputDoc4Size);
+			outputText = pdfStripper.getText(outputDoc4);
+			//Comparison of output and input text
+			assertEquals(outputText, inputText);
+			
+		} catch (Exception e){
 			assertFalse(true);
 		}
 		
 		//TODO
 	}
 	
+	/**
+	 * Test for method PDFGal.split(String inputUri, String outputUri, Integer pages) throws IOException, COSVisitorException;
+	 */
 	@Test
-	public void split(){
-		//TODO
-		assertFalse(true);
+	public void splitSettingNumberOfPages(){
+		
+		String inputUri = System.getProperty("user.dir") + TEST_RESOURCES + "splitinteger\\ISplitIntegerTest.pdf";
+		String outputUri = System.getProperty("user.dir") + TEST_RESOURCES + "splitinteger\\OSplitIntegerTest.pdf";
+		String outputUri1 = System.getProperty("user.dir") + TEST_RESOURCES + "splitinteger\\OSplitIntegerTest_1.pdf";
+		String outputUri2 = System.getProperty("user.dir") + TEST_RESOURCES + "splitinteger\\OSplitIntegerTest_2.pdf";
+		String outputUri3 = System.getProperty("user.dir") + TEST_RESOURCES + "splitinteger\\OSplitIntegerTest_3.pdf";
+		
+		Integer pages = 3;
+		
+		try {
+			pdfGal.split(inputUri, outputUri, pages);
+			
+			PDDocument outputDoc1 = PDDocument.load(outputUri1);
+			PDDocument outputDoc2 = PDDocument.load(outputUri2);
+			PDDocument outputDoc3 = PDDocument.load(outputUri3);
+			PDDocument inputDoc = PDDocument.load(inputUri);
+			
+			Integer outputDoc1Size = outputDoc1.getNumberOfPages();
+			Integer outputDoc2Size = outputDoc2.getNumberOfPages();
+			Integer outputDoc3Size = outputDoc3.getNumberOfPages();
+			
+			Integer inputDocsPagesTotal = outputDoc1Size + outputDoc2Size + outputDoc3Size; 
+			assertEquals(new Integer(inputDoc.getNumberOfPages()), inputDocsPagesTotal);
+			
+			PDFTextStripper pdfStripper = new PDFTextStripper();
+			String inputText = null;
+			String outputText = null;
+			Integer lastInputPage = null;
+			
+			/* Let's compare the first document */
+			//Extraction of input text
+			lastInputPage = outputDoc1Size;
+			pdfStripper.setStartPage(1);
+			pdfStripper.setEndPage(lastInputPage);
+			inputText = pdfStripper.getText(inputDoc);
+			//Extraction of output text
+			pdfStripper.setStartPage(1);
+			pdfStripper.setEndPage(outputDoc1Size);
+			outputText = pdfStripper.getText(outputDoc1);
+			//Comparison of output and input text
+			assertEquals(outputText, inputText);
+			
+			/* Let's compare the second document */
+			//Extraction of input text
+			pdfStripper.setStartPage(lastInputPage + 1);
+			lastInputPage = lastInputPage + outputDoc2Size;
+			pdfStripper.setEndPage(lastInputPage);
+			inputText = pdfStripper.getText(inputDoc);
+			//Extraction of output text
+			pdfStripper.setStartPage(1);
+			pdfStripper.setEndPage(outputDoc2Size);
+			outputText = pdfStripper.getText(outputDoc2);
+			//Comparison of output and input text
+			assertEquals(outputText, inputText);
+			
+			/* Let's compare the third document */
+			//Extraction of input text
+			pdfStripper.setStartPage(lastInputPage + 1);
+			lastInputPage = lastInputPage + outputDoc3Size;
+			pdfStripper.setEndPage(lastInputPage);
+			inputText = pdfStripper.getText(inputDoc);
+			//Extraction of output text
+			pdfStripper.setStartPage(1);
+			pdfStripper.setEndPage(outputDoc3Size);
+			outputText = pdfStripper.getText(outputDoc3);
+			//Comparison of output and input text
+			assertEquals(outputText, inputText);
+			
+		} catch (Exception e){
+			assertFalse(true);
+		}
 	}
 	
 	@Test

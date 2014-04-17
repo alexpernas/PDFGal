@@ -1,6 +1,7 @@
 package org.pdfgal.pdfgal.pdfgal.impl;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -8,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.apache.pdfbox.exceptions.CryptographyException;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.encryption.AccessPermission;
 import org.apache.pdfbox.pdmodel.encryption.BadSecurityHandlerException;
 import org.apache.pdfbox.pdmodel.encryption.DecryptionMaterial;
@@ -51,16 +53,53 @@ public class PDFGalImpl implements PDFGal {
 				CollectionUtils.isNotEmpty(pages)){
 			
 			PDDocument doc = PDDocument.load(inputUri);
+			List<PDDocument> splittedDocs = new ArrayList<PDDocument>();
+			@SuppressWarnings("unchecked")
+			List<PDPage> pagesList = (List<PDPage>) doc.getDocumentCatalog().getAllPages();
+			
+			//This section creates a new document for each split
+			//indicated into the list, except the last one.
+			Integer currentPage = 0;
+			for(Integer page : pages){
+				PDDocument document = new PDDocument();
+				for(Integer i = currentPage; i <= page - 2; i++){
+					document.addPage(pagesList.get(i));
+				}
+				splittedDocs.add(document);
+				currentPage = page - 1;
+			}
+			
+			//This section splits the last document
+			PDDocument lastDocument = new PDDocument();
+			for(Integer i = currentPage; i < pagesList.size(); i++){
+				lastDocument.addPage(pagesList.get(i));
+			}
+			splittedDocs.add(lastDocument);
+			
+			Integer subIndex = 1;
+			for(PDDocument document : splittedDocs){
+				document.save(converterUtils.addSubIndexBeforeExtension(outputUri, subIndex++));
+			}
+			
+		}else{
+			throw new IllegalArgumentException(Constants.ILLEGAL_ARGUMENT_EXCEPTION_MESSAGE);
+		}
+	}
+
+	public void split(String inputUri, String outputUri, Integer pages) throws IOException, COSVisitorException {
+		
+		if(StringUtils.isNotBlank(inputUri) && StringUtils.isNotBlank(outputUri) &&
+				pages != null){
+			
+			PDDocument doc = PDDocument.load(inputUri);
 			
 			Splitter splitter = new Splitter();
 			
-			for(Integer page : pages){
-				splitter.setSplitAtPage(page);
-			}
+			splitter.setSplitAtPage(pages);
 			
 			List<PDDocument> splittedDocs = splitter.split(doc);
 			
-			Integer subIndex = 0;
+			Integer subIndex = 1;
 			for(PDDocument document : splittedDocs){
 				document.save(converterUtils.addSubIndexBeforeExtension(outputUri, subIndex++));
 			}
