@@ -238,8 +238,6 @@ public class PDFGalTest {
 		} catch (Exception e){
 			assertFalse(true);
 		}
-		
-		//TODO
 	}
 	
 	/**
