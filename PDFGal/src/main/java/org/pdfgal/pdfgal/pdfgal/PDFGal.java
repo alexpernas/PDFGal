@@ -7,6 +7,12 @@ import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.apache.pdfbox.exceptions.CryptographyException;
 import org.apache.pdfbox.pdmodel.encryption.BadSecurityHandlerException;
 
+/**
+ * This interface makes the operations with PDF files.
+ * 
+ * @author Alex
+ * 
+ */
 public interface PDFGal {
 
 	/**
