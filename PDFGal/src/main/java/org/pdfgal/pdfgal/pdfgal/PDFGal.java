@@ -102,12 +102,16 @@ public interface PDFGal {
 	 * 
 	 * @param inputUri
 	 * @param outputUri
-	 * @param text Text for the watermark
-	 * @param color Color of the watermark
+	 * @param text Text for the watermark.
+	 * @param color Color of the watermark.
+	 * @param alpha Color opacity.
+	 * @param pages A list with the pages that sould be watermarked, in case.
+	 *            this list is null or empty, all pages will be watermarked.
 	 * @throws IOException
 	 * @throws COSVisitorException
 	 */
-	public void putWatermark(String inputUri, String outputUri, String text, Color color)
-			throws IOException, COSVisitorException;
+	public void putWatermark(final String inputUri, final String outputUri, final String text,
+			final Color color, final Float alpha, List<Integer> pages) throws IOException,
+			COSVisitorException;
 
 }

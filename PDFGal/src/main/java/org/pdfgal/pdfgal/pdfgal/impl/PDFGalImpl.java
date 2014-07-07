@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -12,7 +11,6 @@ import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.apache.pdfbox.exceptions.CryptographyException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDResources;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.encryption.AccessPermission;
 import org.apache.pdfbox.pdmodel.encryption.BadSecurityHandlerException;
@@ -20,12 +18,12 @@ import org.apache.pdfbox.pdmodel.encryption.DecryptionMaterial;
 import org.apache.pdfbox.pdmodel.encryption.StandardDecryptionMaterial;
 import org.apache.pdfbox.pdmodel.encryption.StandardProtectionPolicy;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.apache.pdfbox.pdmodel.graphics.PDExtendedGraphicsState;
 import org.apache.pdfbox.util.PDFMergerUtility;
 import org.apache.pdfbox.util.Splitter;
 import org.pdfgal.pdfgal.pdfgal.PDFGal;
 import org.pdfgal.pdfgal.utils.Constants;
 import org.pdfgal.pdfgal.utils.ConverterUtils;
+import org.pdfgal.pdfgal.utils.WatermarkUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +31,10 @@ import org.springframework.stereotype.Component;
 public class PDFGalImpl implements PDFGal {
 
 	@Autowired
-	ConverterUtils converterUtils;
+	private ConverterUtils converterUtils;
+
+	@Autowired
+	private WatermarkUtils watermarkUtils;
 
 	@Override
 	public void merge(final List<String> inputUris, final String outputUri)
@@ -191,7 +192,8 @@ public class PDFGalImpl implements PDFGal {
 
 	@Override
 	public void putWatermark(final String inputUri, final String outputUri, final String text,
-			final Color color) throws IOException, COSVisitorException {
+			final Color color, final Float alpha, final List<Integer> pages) throws IOException,
+			COSVisitorException {
 		// TODO Auto-generated method stub
 
 		if (StringUtils.isNotBlank(inputUri) && StringUtils.isNotBlank(outputUri)
@@ -206,19 +208,7 @@ public class PDFGalImpl implements PDFGal {
 
 			/* Set up the graphic state */
 
-			// Define a new extended graphic state
-			final PDExtendedGraphicsState extendedGraphicsState = new PDExtendedGraphicsState();
-			// Set the transparency/opacity
-			extendedGraphicsState.setNonStrokingAlphaConstant(0.5f);
-			// Get the page resources.
-			final PDResources resources = page.findResources();
-
-			// Get the defined graphic states.
-			final Map<String, PDExtendedGraphicsState> graphicsStateDictionary = resources
-					.getGraphicsStates();
-
-			graphicsStateDictionary.put("TransparentState", extendedGraphicsState);
-			resources.setGraphicsStates(graphicsStateDictionary);
+			this.watermarkUtils.setUpGraphicState(page, alpha);
 
 			/* End of setup */
 

@@ -440,9 +440,11 @@ public class PDFGalTest {
 				+ "putwatermark\\OPutWatermarkTest.pdf";
 		final String text = "WaTerMarkdd ddddd aaaa dddd cccc ddd";
 		final Color color = Color.gray;
+		final Float alpha = 0.2F;
+		final List<Integer> pages = new ArrayList<Integer>();
 
 		try {
-			this.pdfGal.putWatermark(inputUri, outputUri, text, color);
+			this.pdfGal.putWatermark(inputUri, outputUri, text, color, alpha, pages);
 		} catch (final Exception e) {
 			assertFalse(true);
 		}
