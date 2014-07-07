@@ -1,9 +1,15 @@
 package org.pdfgal.pdfgal.utils.impl;
 
+import java.awt.Color;
+import java.io.IOException;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDResources;
+import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.PDExtendedGraphicsState;
 import org.pdfgal.pdfgal.utils.WatermarkUtils;
 import org.springframework.stereotype.Component;
@@ -14,18 +20,44 @@ public class WatermarkUtilsImpl implements WatermarkUtils {
 	@Override
 	public void setUpGraphicState(final PDPage page, final Float alpha) {
 
-		// Define a new extended graphic state
-		final PDExtendedGraphicsState extendedGraphicsState = new PDExtendedGraphicsState();
-		// Set the transparency/opacity
-		extendedGraphicsState.setNonStrokingAlphaConstant(alpha);
-		// Get the page resources.
-		final PDResources resources = page.findResources();
+		if (page != null && alpha != null) {
 
-		// Get the defined graphic states.
-		final Map<String, PDExtendedGraphicsState> graphicsStateDictionary = resources
-				.getGraphicsStates();
+			// Define a new extended graphic state
+			final PDExtendedGraphicsState extendedGraphicsState = new PDExtendedGraphicsState();
+			// Set the transparency/opacity
+			extendedGraphicsState.setNonStrokingAlphaConstant(alpha);
+			// Get the page resources.
+			final PDResources resources = page.findResources();
 
-		graphicsStateDictionary.put("TransparentState", extendedGraphicsState);
-		resources.setGraphicsStates(graphicsStateDictionary);
+			// Get the defined graphic states.
+			final Map<String, PDExtendedGraphicsState> graphicsStateDictionary = resources
+					.getGraphicsStates();
+
+			graphicsStateDictionary.put("TransparentState",
+					extendedGraphicsState);
+			resources.setGraphicsStates(graphicsStateDictionary);
+		}
+	}
+
+	@Override
+	public void addWatermark(final PDDocument doc, final PDPage page,
+			final Color color, final String text) throws IOException {
+
+		if (doc != null && page != null && color != null
+				&& StringUtils.isNotBlank(text)) {
+
+			final PDPageContentStream contentStream = new PDPageContentStream(
+					doc, page, true, true);
+			contentStream.appendRawCommands("/TransparentState gs\n");
+			contentStream.setNonStrokingColor(color);
+			contentStream.beginText();
+			// TODO Modificar tamanho segundo letras do texto
+			contentStream.setFont(PDType1Font.HELVETICA, 72);
+			contentStream.moveTextPositionByAmount(10, 10);
+			contentStream.setTextRotation(1, 100, 100);
+			contentStream.drawString(text);
+			contentStream.endText();
+			contentStream.close();
+		}
 	}
 }

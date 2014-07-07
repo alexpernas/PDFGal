@@ -1,5 +1,8 @@
 package org.pdfgal.pdfgal.utils.impl;
 
+import java.util.List;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.pdfgal.pdfgal.utils.Constants;
 import org.pdfgal.pdfgal.utils.ConverterUtils;
@@ -40,4 +43,22 @@ public class ConverterUtilsImpl implements ConverterUtils {
 		return result;
 	}
 
+	@Override
+	public void deleteNonSelectedPositions(final List<?> objectsList,
+			final List<Integer> positionsList) {
+
+		if (CollectionUtils.isNotEmpty(objectsList)
+				&& CollectionUtils.isNotEmpty(positionsList)) {
+			Integer deleted = 0;
+			for (final Integer position : positionsList) {
+				try {
+					// TODO mal, elimina agora mesmo as que non debe eliminar :P
+					objectsList.remove(position + deleted - 1);
+					deleted++;
+				} catch (final Exception e) {
+					continue;
+				}
+			}
+		}
+	}
 }
