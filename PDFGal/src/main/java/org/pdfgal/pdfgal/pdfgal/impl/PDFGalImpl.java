@@ -1,8 +1,10 @@
 package org.pdfgal.pdfgal.pdfgal.impl;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -10,11 +12,15 @@ import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.apache.pdfbox.exceptions.CryptographyException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDResources;
+import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.encryption.AccessPermission;
 import org.apache.pdfbox.pdmodel.encryption.BadSecurityHandlerException;
 import org.apache.pdfbox.pdmodel.encryption.DecryptionMaterial;
 import org.apache.pdfbox.pdmodel.encryption.StandardDecryptionMaterial;
 import org.apache.pdfbox.pdmodel.encryption.StandardProtectionPolicy;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.graphics.PDExtendedGraphicsState;
 import org.apache.pdfbox.util.PDFMergerUtility;
 import org.apache.pdfbox.util.Splitter;
 import org.pdfgal.pdfgal.pdfgal.PDFGal;
@@ -183,4 +189,57 @@ public class PDFGalImpl implements PDFGal {
 		}
 	}
 
+	@Override
+	public void putWatermark(final String inputUri, final String outputUri, final String text,
+			final Color color) throws IOException, COSVisitorException {
+		// TODO Auto-generated method stub
+
+		if (StringUtils.isNotBlank(inputUri) && StringUtils.isNotBlank(outputUri)
+				&& StringUtils.isNotBlank(text) && color != null) {
+
+			final PDDocument doc = PDDocument.load(inputUri);
+			final PDPage page = (PDPage) doc.getDocumentCatalog().getAllPages().get(0);
+
+			// The transparency, opacity of graphic objects can be set directly
+			// on the drawing commands but need to be set to a graphic state
+			// which will become part of the resources.
+
+			/* Set up the graphic state */
+
+			// Define a new extended graphic state
+			final PDExtendedGraphicsState extendedGraphicsState = new PDExtendedGraphicsState();
+			// Set the transparency/opacity
+			extendedGraphicsState.setNonStrokingAlphaConstant(0.5f);
+			// Get the page resources.
+			final PDResources resources = page.findResources();
+
+			// Get the defined graphic states.
+			final Map<String, PDExtendedGraphicsState> graphicsStateDictionary = resources
+					.getGraphicsStates();
+
+			graphicsStateDictionary.put("TransparentState", extendedGraphicsState);
+			resources.setGraphicsStates(graphicsStateDictionary);
+
+			/* End of setup */
+
+			// Now we will be able to call the state definition before doing the
+			// drawing
+			final PDPageContentStream contentStream = new PDPageContentStream(doc, page, true, true);
+			contentStream.appendRawCommands("/TransparentState gs\n");
+			contentStream.setNonStrokingColor(color);
+			contentStream.beginText();
+			contentStream.setFont(PDType1Font.HELVETICA, 72);
+			contentStream.moveTextPositionByAmount(10, 10);
+			contentStream.setTextRotation(1, 100, 100);
+			contentStream.drawString(text);
+			contentStream.endText();
+			contentStream.close();
+
+			doc.save(outputUri);
+			doc.close();
+
+		} else {
+			throw new IllegalArgumentException(Constants.ILLEGAL_ARGUMENT_EXCEPTION_MESSAGE);
+		}
+	}
 }

@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -426,6 +427,22 @@ public class PDFGalTest {
 			// Closing document
 			doc.close();
 
+		} catch (final Exception e) {
+			assertFalse(true);
+		}
+	}
+
+	@Test
+	public void putWatermark() {
+		final String inputUri = System.getProperty("user.dir") + TEST_RESOURCES
+				+ "putwatermark\\IPutWatermarkTest.pdf";
+		final String outputUri = System.getProperty("user.dir") + TEST_RESOURCES
+				+ "putwatermark\\OPutWatermarkTest.pdf";
+		final String text = "WaTerMarkdd ddddd aaaa dddd cccc ddd";
+		final Color color = Color.gray;
+
+		try {
+			this.pdfGal.putWatermark(inputUri, outputUri, text, color);
 		} catch (final Exception e) {
 			assertFalse(true);
 		}

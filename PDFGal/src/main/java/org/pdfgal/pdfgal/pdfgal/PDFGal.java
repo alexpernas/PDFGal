@@ -1,5 +1,6 @@
 package org.pdfgal.pdfgal.pdfgal;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.util.List;
 
@@ -26,8 +27,8 @@ public interface PDFGal {
 	 * @throws IOException
 	 * @throws COSVisitorException
 	 */
-	public void merge(List<String> inputUris, String outputUri)
-			throws COSVisitorException, IOException;
+	public void merge(List<String> inputUris, String outputUri) throws COSVisitorException,
+			IOException;
 
 	/**
 	 * This method splits PDFs. Parameter inputUri must contain the URI where
@@ -43,8 +44,8 @@ public interface PDFGal {
 	 * @throws IOException
 	 * @throws COSVisitorException
 	 */
-	public List<String> split(String inputUri, String outputUri,
-			List<Integer> pages) throws IOException, COSVisitorException;
+	public List<String> split(String inputUri, String outputUri, List<Integer> pages)
+			throws IOException, COSVisitorException;
 
 	/**
 	 * This method splits PDFs. Parameter inputUri must contain the URI where
@@ -60,8 +61,8 @@ public interface PDFGal {
 	 * @throws IOException
 	 * @throws COSVisitorException
 	 */
-	public List<String> split(String inputUri, String outputUri, Integer pages)
-			throws IOException, COSVisitorException;
+	public List<String> split(String inputUri, String outputUri, Integer pages) throws IOException,
+			COSVisitorException;
 
 	/**
 	 * This method password protects a PDF document. Parameter inputUri must
@@ -76,9 +77,8 @@ public interface PDFGal {
 	 * @throws BadSecurityHandlerException
 	 * @throws COSVisitorException
 	 */
-	public void protect(String inputUri, String outputUri, String password)
-			throws IOException, BadSecurityHandlerException,
-			COSVisitorException;
+	public void protect(String inputUri, String outputUri, String password) throws IOException,
+			BadSecurityHandlerException, COSVisitorException;
 
 	/**
 	 * This method eliminates password protection into a PDF document. Parameter
@@ -94,8 +94,20 @@ public interface PDFGal {
 	 * @throws CryptographyException
 	 * @throws BadSecurityHandlerException
 	 */
-	public void unProtect(String inputUri, String outputUri, String password)
-			throws IOException, COSVisitorException,
-			BadSecurityHandlerException, CryptographyException;
+	public void unProtect(String inputUri, String outputUri, String password) throws IOException,
+			COSVisitorException, BadSecurityHandlerException, CryptographyException;
+
+	/**
+	 * Puts a watermark in the document with the indicated text.
+	 * 
+	 * @param inputUri
+	 * @param outputUri
+	 * @param text Text for the watermark
+	 * @param color Color of the watermark
+	 * @throws IOException
+	 * @throws COSVisitorException
+	 */
+	public void putWatermark(String inputUri, String outputUri, String text, Color color)
+			throws IOException, COSVisitorException;
 
 }
