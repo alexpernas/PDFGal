@@ -16,7 +16,9 @@ public class PDFUtilsImpl implements PDFUtils {
 			throw new IOException();
 		}
 		final PDDocument document = PDDocument.load(uri);
-		return document.getNumberOfPages();
+		final Integer numberOfPages = document.getNumberOfPages();
+		document.close();
+		return numberOfPages;
 	}
 
 }

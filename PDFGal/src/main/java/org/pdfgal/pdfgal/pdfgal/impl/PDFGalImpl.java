@@ -33,8 +33,7 @@ public class PDFGalImpl implements PDFGal {
 	public void merge(final List<String> inputUris, final String outputUri)
 			throws COSVisitorException, IOException {
 
-		if (CollectionUtils.isNotEmpty(inputUris)
-				&& StringUtils.isNotBlank(outputUri)) {
+		if (CollectionUtils.isNotEmpty(inputUris) && StringUtils.isNotBlank(outputUri)) {
 
 			final PDFMergerUtility merger = new PDFMergerUtility();
 
@@ -46,8 +45,7 @@ public class PDFGalImpl implements PDFGal {
 			merger.mergeDocuments();
 
 		} else {
-			throw new IllegalArgumentException(
-					Constants.ILLEGAL_ARGUMENT_EXCEPTION_MESSAGE);
+			throw new IllegalArgumentException(Constants.ILLEGAL_ARGUMENT_EXCEPTION_MESSAGE);
 		}
 	}
 
@@ -57,15 +55,13 @@ public class PDFGalImpl implements PDFGal {
 
 		final List<String> result = new ArrayList<String>();
 
-		if (StringUtils.isNotBlank(inputUri)
-				&& StringUtils.isNotBlank(outputUri)
+		if (StringUtils.isNotBlank(inputUri) && StringUtils.isNotBlank(outputUri)
 				&& CollectionUtils.isNotEmpty(pages)) {
 
 			final PDDocument doc = PDDocument.load(inputUri);
 			final List<PDDocument> splittedDocs = new ArrayList<PDDocument>();
 			@SuppressWarnings("unchecked")
-			final List<PDPage> pagesList = doc.getDocumentCatalog()
-					.getAllPages();
+			final List<PDPage> pagesList = doc.getDocumentCatalog().getAllPages();
 
 			// This section creates a new document for each split
 			// indicated into the list, except the last one.
@@ -77,6 +73,7 @@ public class PDFGalImpl implements PDFGal {
 				}
 				splittedDocs.add(document);
 				currentPage = page - 1;
+				document.close();
 			}
 
 			// This section splits the last document
@@ -85,31 +82,32 @@ public class PDFGalImpl implements PDFGal {
 				lastDocument.addPage(pagesList.get(i));
 			}
 			splittedDocs.add(lastDocument);
+			lastDocument.close();
 
 			Integer subIndex = 1;
 			for (final PDDocument document : splittedDocs) {
-				final String extension = this.converterUtils
-						.addSubIndexBeforeExtension(outputUri, subIndex++);
+				final String extension = this.converterUtils.addSubIndexBeforeExtension(outputUri,
+						subIndex++);
 				document.save(extension);
 				result.add(extension);
 			}
 
+			doc.close();
+
 		} else {
-			throw new IllegalArgumentException(
-					Constants.ILLEGAL_ARGUMENT_EXCEPTION_MESSAGE);
+			throw new IllegalArgumentException(Constants.ILLEGAL_ARGUMENT_EXCEPTION_MESSAGE);
 		}
 
 		return result;
 	}
 
 	@Override
-	public List<String> split(final String inputUri, final String outputUri,
-			final Integer pages) throws IOException, COSVisitorException {
+	public List<String> split(final String inputUri, final String outputUri, final Integer pages)
+			throws IOException, COSVisitorException {
 
 		final List<String> result = new ArrayList<String>();
 
-		if (StringUtils.isNotBlank(inputUri)
-				&& StringUtils.isNotBlank(outputUri) && pages != null) {
+		if (StringUtils.isNotBlank(inputUri) && StringUtils.isNotBlank(outputUri) && pages != null) {
 
 			final PDDocument doc = PDDocument.load(inputUri);
 
@@ -121,67 +119,67 @@ public class PDFGalImpl implements PDFGal {
 
 			Integer subIndex = 1;
 			for (final PDDocument document : splittedDocs) {
-				final String extension = this.converterUtils
-						.addSubIndexBeforeExtension(outputUri, subIndex++);
+				final String extension = this.converterUtils.addSubIndexBeforeExtension(outputUri,
+						subIndex++);
 				document.save(extension);
 				result.add(extension);
+				document.close();
 			}
 
+			doc.close();
+
 		} else {
-			throw new IllegalArgumentException(
-					Constants.ILLEGAL_ARGUMENT_EXCEPTION_MESSAGE);
+			throw new IllegalArgumentException(Constants.ILLEGAL_ARGUMENT_EXCEPTION_MESSAGE);
 		}
 
 		return result;
 	}
 
 	@Override
-	public void protect(final String inputUri, final String outputUri,
-			final String password) throws IOException,
-			BadSecurityHandlerException, COSVisitorException {
+	public void protect(final String inputUri, final String outputUri, final String password)
+			throws IOException, BadSecurityHandlerException, COSVisitorException {
 
-		if (StringUtils.isNotBlank(inputUri)
-				&& StringUtils.isNotBlank(outputUri)
+		if (StringUtils.isNotBlank(inputUri) && StringUtils.isNotBlank(outputUri)
 				&& StringUtils.isNotBlank(password)) {
 
 			final PDDocument doc = PDDocument.load(inputUri);
 
-			final StandardProtectionPolicy pp = new StandardProtectionPolicy(
-					password, password, new AccessPermission());
+			final StandardProtectionPolicy pp = new StandardProtectionPolicy(password, password,
+					new AccessPermission());
 			doc.protect(pp);
 
 			doc.save(outputUri);
 
+			doc.close();
+
 		} else {
-			throw new IllegalArgumentException(
-					Constants.ILLEGAL_ARGUMENT_EXCEPTION_MESSAGE);
+			throw new IllegalArgumentException(Constants.ILLEGAL_ARGUMENT_EXCEPTION_MESSAGE);
 		}
 	}
 
 	@Override
-	public void unProtect(final String inputUri, final String outputUri,
-			final String password) throws IOException, COSVisitorException,
-			BadSecurityHandlerException, CryptographyException {
+	public void unProtect(final String inputUri, final String outputUri, final String password)
+			throws IOException, COSVisitorException, BadSecurityHandlerException,
+			CryptographyException {
 
-		if (StringUtils.isNotBlank(inputUri)
-				&& StringUtils.isNotBlank(outputUri)
+		if (StringUtils.isNotBlank(inputUri) && StringUtils.isNotBlank(outputUri)
 				&& StringUtils.isNotBlank(password)) {
 
 			final PDDocument doc = PDDocument.load(inputUri);
 
-			final DecryptionMaterial decryptionMaterial = new StandardDecryptionMaterial(
-					password);
+			final DecryptionMaterial decryptionMaterial = new StandardDecryptionMaterial(password);
 			doc.openProtection(decryptionMaterial);
 
-			final StandardProtectionPolicy pp = new StandardProtectionPolicy(
-					null, null, new AccessPermission());
+			final StandardProtectionPolicy pp = new StandardProtectionPolicy(null, null,
+					new AccessPermission());
 			doc.protect(pp);
 
 			doc.save(outputUri);
 
+			doc.close();
+
 		} else {
-			throw new IllegalArgumentException(
-					Constants.ILLEGAL_ARGUMENT_EXCEPTION_MESSAGE);
+			throw new IllegalArgumentException(Constants.ILLEGAL_ARGUMENT_EXCEPTION_MESSAGE);
 		}
 	}
 
