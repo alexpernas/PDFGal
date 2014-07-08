@@ -444,22 +444,11 @@ public class PDFGalTest {
 				+ "putwatermark\\IPutWatermarkTest.pdf";
 		final String outputUri = System.getProperty("user.dir")
 				+ TEST_RESOURCES + "putwatermark\\OPutWatermarkTest.pdf";
-		final String text = "123456789012";
+		final String text = "Watermark";
 		final Color color = Color.gray;
 		final Float alpha = 0.2F;
 		final List<Integer> pages = new ArrayList<Integer>();
 		final WatermarkPosition watermarkPosition = WatermarkPosition.GOING_UP;
-
-		// pages.add(-1);
-		// pages.add(0);
-		// pages.add(2);
-		// pages.add(3);
-		// pages.add(5);
-		// pages.add(7);
-		// pages.add(8);
-		// pages.add(9);
-		// pages.add(11);
-		// pages.add(15);
 
 		try {
 			this.pdfGal.putWatermark(inputUri, outputUri, text, color, alpha,
