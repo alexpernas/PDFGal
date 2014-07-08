@@ -11,6 +11,7 @@ import org.apache.pdfbox.pdmodel.PDResources;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.PDExtendedGraphicsState;
+import org.pdfgal.pdfgal.model.enumerated.WatermarkPosition;
 import org.pdfgal.pdfgal.utils.WatermarkUtils;
 import org.springframework.stereotype.Component;
 
@@ -33,28 +34,26 @@ public class WatermarkUtilsImpl implements WatermarkUtils {
 			final Map<String, PDExtendedGraphicsState> graphicsStateDictionary = resources
 					.getGraphicsStates();
 
-			graphicsStateDictionary.put("TransparentState",
-					extendedGraphicsState);
+			graphicsStateDictionary.put("TransparentState", extendedGraphicsState);
 			resources.setGraphicsStates(graphicsStateDictionary);
 		}
 	}
 
 	@Override
-	public void addWatermark(final PDDocument doc, final PDPage page,
-			final Color color, final String text) throws IOException {
+	public void addWatermark(final PDDocument doc, final PDPage page, final Color color,
+			final String text, final WatermarkPosition watermarkPosition) throws IOException {
 
-		if (doc != null && page != null && color != null
-				&& StringUtils.isNotBlank(text)) {
+		if (doc != null && page != null && color != null && StringUtils.isNotBlank(text)
+				&& watermarkPosition != null) {
 
-			final PDPageContentStream contentStream = new PDPageContentStream(
-					doc, page, true, true);
+			final PDPageContentStream contentStream = new PDPageContentStream(doc, page, true, true);
 			contentStream.appendRawCommands("/TransparentState gs\n");
 			contentStream.setNonStrokingColor(color);
 			contentStream.beginText();
-			// TODO Modificar tamanho segundo letras do texto
-			contentStream.setFont(PDType1Font.HELVETICA, 72);
-			contentStream.moveTextPositionByAmount(10, 10);
-			contentStream.setTextRotation(1, 100, 100);
+			contentStream.setFont(PDType1Font.HELVETICA, 70);
+			contentStream.setTextRotation(watermarkPosition.getRotationAngle(),
+					watermarkPosition.getRotationTX(), watermarkPosition.getRotationTY());
+			// TODO Facer que o texto estea centrado
 			contentStream.drawString(text);
 			contentStream.endText();
 			contentStream.close();

@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.apache.pdfbox.exceptions.CryptographyException;
 import org.apache.pdfbox.pdmodel.encryption.BadSecurityHandlerException;
+import org.pdfgal.pdfgal.model.enumerated.WatermarkPosition;
 
 /**
  * This interface makes the operations with PDF files.
@@ -105,13 +106,14 @@ public interface PDFGal {
 	 * @param text Text for the watermark.
 	 * @param color Color of the watermark.
 	 * @param alpha Color opacity.
+	 * @param watermarkPosition Position of the watermark in the page.
 	 * @param pages A list with the pages that sould be watermarked, in case.
 	 *            this list is null or empty, all pages will be watermarked.
 	 * @throws IOException
 	 * @throws COSVisitorException
 	 */
 	public void putWatermark(final String inputUri, final String outputUri, final String text,
-			final Color color, final Float alpha, List<Integer> pages) throws IOException,
-			COSVisitorException;
+			final Color color, final Float alpha, WatermarkPosition watermarkPosition,
+			List<Integer> pages) throws IOException, COSVisitorException;
 
 }

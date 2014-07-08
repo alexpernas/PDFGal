@@ -13,6 +13,7 @@ import org.apache.pdfbox.pdmodel.encryption.StandardDecryptionMaterial;
 import org.apache.pdfbox.util.PDFTextStripper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.pdfgal.pdfgal.model.enumerated.WatermarkPosition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -439,10 +440,11 @@ public class PDFGalTest {
 				+ "putwatermark\\IPutWatermarkTest.pdf";
 		final String outputUri = System.getProperty("user.dir") + TEST_RESOURCES
 				+ "putwatermark\\OPutWatermarkTest.pdf";
-		final String text = "WaTerMarkdd ddddd aaaa dddd cccc ddd";
+		final String text = "123456789012";
 		final Color color = Color.gray;
 		final Float alpha = 0.2F;
 		final List<Integer> pages = new ArrayList<Integer>();
+		final WatermarkPosition watermarkPosition = WatermarkPosition.GOING_UP;
 
 		// pages.add(-1);
 		// pages.add(0);
@@ -456,7 +458,8 @@ public class PDFGalTest {
 		// pages.add(15);
 
 		try {
-			this.pdfGal.putWatermark(inputUri, outputUri, text, color, alpha, pages);
+			this.pdfGal.putWatermark(inputUri, outputUri, text, color, alpha, watermarkPosition,
+					pages);
 		} catch (final Exception e) {
 			assertFalse(true);
 		}

@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
+import org.pdfgal.pdfgal.model.enumerated.WatermarkPosition;
 
 public interface WatermarkUtils {
 
@@ -17,15 +18,17 @@ public interface WatermarkUtils {
 	public void setUpGraphicState(PDPage page, Float alpha);
 
 	/**
-	 * Adds a watermark to the document's page, with the color indicated.
+	 * Adds a watermark to the document's page, with the color and position
+	 * indicated.
 	 * 
 	 * @param doc
 	 * @param page
 	 * @param color
 	 * @param text
+	 * @param watermarkPosition
 	 * @throws IOException
 	 */
-	public void addWatermark(PDDocument doc, PDPage page, Color color,
-			String text) throws IOException;
+	public void addWatermark(PDDocument doc, PDPage page, Color color, String text,
+			WatermarkPosition watermarkPosition) throws IOException;
 
 }
