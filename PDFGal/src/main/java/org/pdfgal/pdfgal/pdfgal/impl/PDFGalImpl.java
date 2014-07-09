@@ -1,9 +1,13 @@
 package org.pdfgal.pdfgal.pdfgal.impl;
 
 import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -11,11 +15,14 @@ import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.apache.pdfbox.exceptions.CryptographyException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.encryption.AccessPermission;
 import org.apache.pdfbox.pdmodel.encryption.BadSecurityHandlerException;
 import org.apache.pdfbox.pdmodel.encryption.DecryptionMaterial;
 import org.apache.pdfbox.pdmodel.encryption.StandardDecryptionMaterial;
 import org.apache.pdfbox.pdmodel.encryption.StandardProtectionPolicy;
+import org.apache.pdfbox.pdmodel.graphics.xobject.PDPixelMap;
+import org.apache.pdfbox.pdmodel.graphics.xobject.PDXObjectImage;
 import org.apache.pdfbox.util.PDFMergerUtility;
 import org.apache.pdfbox.util.Splitter;
 import org.pdfgal.pdfgal.exceptions.WatermarkOutOfLengthException;
@@ -40,8 +47,7 @@ public class PDFGalImpl implements PDFGal {
 	public void merge(final List<String> inputUris, final String outputUri)
 			throws COSVisitorException, IOException {
 
-		if (CollectionUtils.isNotEmpty(inputUris)
-				&& StringUtils.isNotBlank(outputUri)) {
+		if (CollectionUtils.isNotEmpty(inputUris) && StringUtils.isNotBlank(outputUri)) {
 
 			final PDFMergerUtility merger = new PDFMergerUtility();
 
@@ -53,8 +59,7 @@ public class PDFGalImpl implements PDFGal {
 			merger.mergeDocuments();
 
 		} else {
-			throw new IllegalArgumentException(
-					Constants.ILLEGAL_ARGUMENT_EXCEPTION_MESSAGE);
+			throw new IllegalArgumentException(Constants.ILLEGAL_ARGUMENT_EXCEPTION_MESSAGE);
 		}
 	}
 
@@ -64,15 +69,13 @@ public class PDFGalImpl implements PDFGal {
 
 		final List<String> result = new ArrayList<String>();
 
-		if (StringUtils.isNotBlank(inputUri)
-				&& StringUtils.isNotBlank(outputUri)
+		if (StringUtils.isNotBlank(inputUri) && StringUtils.isNotBlank(outputUri)
 				&& CollectionUtils.isNotEmpty(pages)) {
 
 			final PDDocument doc = PDDocument.load(inputUri);
 			final List<PDDocument> splittedDocs = new ArrayList<PDDocument>();
 			@SuppressWarnings("unchecked")
-			final List<PDPage> pagesList = doc.getDocumentCatalog()
-					.getAllPages();
+			final List<PDPage> pagesList = doc.getDocumentCatalog().getAllPages();
 
 			// This section creates a new document for each split
 			// indicated into the list, except the last one.
@@ -97,8 +100,8 @@ public class PDFGalImpl implements PDFGal {
 
 			Integer subIndex = 1;
 			for (final PDDocument document : splittedDocs) {
-				final String extension = this.converterUtils
-						.addSubIndexBeforeExtension(outputUri, subIndex++);
+				final String extension = this.converterUtils.addSubIndexBeforeExtension(outputUri,
+						subIndex++);
 				document.save(extension);
 				result.add(extension);
 			}
@@ -106,21 +109,19 @@ public class PDFGalImpl implements PDFGal {
 			doc.close();
 
 		} else {
-			throw new IllegalArgumentException(
-					Constants.ILLEGAL_ARGUMENT_EXCEPTION_MESSAGE);
+			throw new IllegalArgumentException(Constants.ILLEGAL_ARGUMENT_EXCEPTION_MESSAGE);
 		}
 
 		return result;
 	}
 
 	@Override
-	public List<String> split(final String inputUri, final String outputUri,
-			final Integer pages) throws IOException, COSVisitorException {
+	public List<String> split(final String inputUri, final String outputUri, final Integer pages)
+			throws IOException, COSVisitorException {
 
 		final List<String> result = new ArrayList<String>();
 
-		if (StringUtils.isNotBlank(inputUri)
-				&& StringUtils.isNotBlank(outputUri) && pages != null) {
+		if (StringUtils.isNotBlank(inputUri) && StringUtils.isNotBlank(outputUri) && pages != null) {
 
 			final PDDocument doc = PDDocument.load(inputUri);
 
@@ -132,8 +133,8 @@ public class PDFGalImpl implements PDFGal {
 
 			Integer subIndex = 1;
 			for (final PDDocument document : splittedDocs) {
-				final String extension = this.converterUtils
-						.addSubIndexBeforeExtension(outputUri, subIndex++);
+				final String extension = this.converterUtils.addSubIndexBeforeExtension(outputUri,
+						subIndex++);
 				document.save(extension);
 				result.add(extension);
 				document.close();
@@ -142,26 +143,23 @@ public class PDFGalImpl implements PDFGal {
 			doc.close();
 
 		} else {
-			throw new IllegalArgumentException(
-					Constants.ILLEGAL_ARGUMENT_EXCEPTION_MESSAGE);
+			throw new IllegalArgumentException(Constants.ILLEGAL_ARGUMENT_EXCEPTION_MESSAGE);
 		}
 
 		return result;
 	}
 
 	@Override
-	public void protect(final String inputUri, final String outputUri,
-			final String password) throws IOException,
-			BadSecurityHandlerException, COSVisitorException {
+	public void protect(final String inputUri, final String outputUri, final String password)
+			throws IOException, BadSecurityHandlerException, COSVisitorException {
 
-		if (StringUtils.isNotBlank(inputUri)
-				&& StringUtils.isNotBlank(outputUri)
+		if (StringUtils.isNotBlank(inputUri) && StringUtils.isNotBlank(outputUri)
 				&& StringUtils.isNotBlank(password)) {
 
 			final PDDocument doc = PDDocument.load(inputUri);
 
-			final StandardProtectionPolicy pp = new StandardProtectionPolicy(
-					password, password, new AccessPermission());
+			final StandardProtectionPolicy pp = new StandardProtectionPolicy(password, password,
+					new AccessPermission());
 			doc.protect(pp);
 
 			doc.save(outputUri);
@@ -169,28 +167,25 @@ public class PDFGalImpl implements PDFGal {
 			doc.close();
 
 		} else {
-			throw new IllegalArgumentException(
-					Constants.ILLEGAL_ARGUMENT_EXCEPTION_MESSAGE);
+			throw new IllegalArgumentException(Constants.ILLEGAL_ARGUMENT_EXCEPTION_MESSAGE);
 		}
 	}
 
 	@Override
-	public void unProtect(final String inputUri, final String outputUri,
-			final String password) throws IOException, COSVisitorException,
-			BadSecurityHandlerException, CryptographyException {
+	public void unProtect(final String inputUri, final String outputUri, final String password)
+			throws IOException, COSVisitorException, BadSecurityHandlerException,
+			CryptographyException {
 
-		if (StringUtils.isNotBlank(inputUri)
-				&& StringUtils.isNotBlank(outputUri)
+		if (StringUtils.isNotBlank(inputUri) && StringUtils.isNotBlank(outputUri)
 				&& StringUtils.isNotBlank(password)) {
 
 			final PDDocument doc = PDDocument.load(inputUri);
 
-			final DecryptionMaterial decryptionMaterial = new StandardDecryptionMaterial(
-					password);
+			final DecryptionMaterial decryptionMaterial = new StandardDecryptionMaterial(password);
 			doc.openProtection(decryptionMaterial);
 
-			final StandardProtectionPolicy pp = new StandardProtectionPolicy(
-					null, null, new AccessPermission());
+			final StandardProtectionPolicy pp = new StandardProtectionPolicy(null, null,
+					new AccessPermission());
 			doc.protect(pp);
 
 			doc.save(outputUri);
@@ -198,21 +193,18 @@ public class PDFGalImpl implements PDFGal {
 			doc.close();
 
 		} else {
-			throw new IllegalArgumentException(
-					Constants.ILLEGAL_ARGUMENT_EXCEPTION_MESSAGE);
+			throw new IllegalArgumentException(Constants.ILLEGAL_ARGUMENT_EXCEPTION_MESSAGE);
 		}
 	}
 
 	@Override
-	public void putWatermark(final String inputUri, final String outputUri,
-			final String text, final Color color, final Float alpha,
-			final WatermarkPosition watermarkPosition, final List<Integer> pages)
-			throws IOException, COSVisitorException {
+	public void putWatermark(final String inputUri, final String outputUri, final String text,
+			final Color color, final Float alpha, final WatermarkPosition watermarkPosition,
+			final List<Integer> pages) throws IOException, COSVisitorException {
 
-		if (StringUtils.isNotBlank(inputUri)
-				&& StringUtils.isNotBlank(outputUri)
-				&& StringUtils.isNotBlank(text) && color != null
-				&& alpha != null && watermarkPosition != null) {
+		if (StringUtils.isNotBlank(inputUri) && StringUtils.isNotBlank(outputUri)
+				&& StringUtils.isNotBlank(text) && color != null && alpha != null
+				&& watermarkPosition != null) {
 
 			if (text.length() > watermarkPosition.getMaxLength()) {
 				throw new WatermarkOutOfLengthException(
@@ -224,29 +216,86 @@ public class PDFGalImpl implements PDFGal {
 
 			this.converterUtils.deleteNonSelectedPositions(allPages, pages);
 
-			for (final Object object : allPages) {
-				final PDPage page = (PDPage) object;
+			if (CollectionUtils.isNotEmpty(allPages)) {
+				for (final Object object : allPages) {
+					final PDPage page = (PDPage) object;
 
-				// The transparency, opacity of graphic objects can be set
-				// directly
-				// on the drawing commands but need to be set to a graphic state
-				// which will become part of the resources. Graphic state is set
-				// up.
-				this.watermarkUtils.setUpGraphicState(page, alpha);
+					// The transparency, opacity of graphic objects can be set
+					// directly
+					// on the drawing commands but need to be set to a graphic
+					// state
+					// which will become part of the resources. Graphic state is
+					// set
+					// up.
+					this.watermarkUtils.setUpGraphicState(page, alpha);
 
-				// Now we will be able to call the state definition before doing
-				// the
-				// drawing
-				this.watermarkUtils.addWatermark(doc, page, color, text,
-						watermarkPosition);
+					// Now we will be able to call the state definition before
+					// doing
+					// the
+					// drawing
+					this.watermarkUtils.addWatermark(doc, page, color, text, watermarkPosition);
+				}
 			}
 
 			doc.save(outputUri);
 			doc.close();
 
 		} else {
-			throw new IllegalArgumentException(
-					Constants.ILLEGAL_ARGUMENT_EXCEPTION_MESSAGE);
+			throw new IllegalArgumentException(Constants.ILLEGAL_ARGUMENT_EXCEPTION_MESSAGE);
+		}
+	}
+
+	// TODO Comprobar o das marcas de auga para documentos en horizontal tal...
+
+	@Override
+	public void putWatermark(final String inputUri, final String outputUri, final String imageUri,
+			final List<Integer> pages) throws IOException, COSVisitorException {
+		// TODO Engadir alpha?
+		// TODO Auto-generated method stub
+		if (StringUtils.isNotBlank(inputUri) && StringUtils.isNotBlank(outputUri)
+				&& StringUtils.isNotBlank(imageUri)) {
+
+			final PDDocument doc = PDDocument.load(inputUri);
+			final List<?> allPages = doc.getDocumentCatalog().getAllPages();
+
+			this.converterUtils.deleteNonSelectedPositions(allPages, pages);
+
+			// Convert the image to TYPE_4BYTE_ABGR so PDFBox won't throw
+			// exceptions (e.g. for transparent png's).
+			// TODO Controlar tamanho de imaxe
+			final BufferedImage tmp_image = ImageIO.read(new File(imageUri));
+			final BufferedImage image = new BufferedImage(tmp_image.getWidth(),
+					tmp_image.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
+
+			image.createGraphics().drawRenderedImage(tmp_image, null);
+
+			final PDXObjectImage pdxObjectImage = new PDPixelMap(doc, image);
+
+			if (CollectionUtils.isNotEmpty(allPages)) {
+				for (final Object object : allPages) {
+
+					final PDPage page = (PDPage) object;
+
+					final PDPageContentStream contentStream = new PDPageContentStream(doc, page,
+							true, true);
+
+					// TODO Utilizar drawImage para indicar a posición???
+					contentStream.drawXObject(pdxObjectImage, null);
+
+					// contentStream.drawXObject(ximage, x, y, ximage.getWidth()
+					// *
+					// scale, ximage.getHeight()
+					// * scale);
+
+					contentStream.close();
+				}
+			}
+
+			doc.save(outputUri);
+			doc.close();
+
+		} else {
+			throw new IllegalArgumentException(Constants.ILLEGAL_ARGUMENT_EXCEPTION_MESSAGE);
 		}
 	}
 }

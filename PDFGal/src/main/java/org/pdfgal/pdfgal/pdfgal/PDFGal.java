@@ -112,8 +112,22 @@ public interface PDFGal {
 	 * @throws IOException
 	 * @throws COSVisitorException
 	 */
-	public void putWatermark(final String inputUri, final String outputUri, final String text,
-			final Color color, final Float alpha, WatermarkPosition watermarkPosition,
-			List<Integer> pages) throws IOException, COSVisitorException;
+	public void putWatermark(String inputUri, String outputUri, String text, Color color,
+			Float alpha, WatermarkPosition watermarkPosition, List<Integer> pages)
+			throws IOException, COSVisitorException;
 
+	/**
+	 * Puts a watermark in the document. The watermark is the image sent as
+	 * argument.
+	 * 
+	 * @param inputUri
+	 * @param outputUri
+	 * @param imageUri
+	 * @param pages A list with the pages that sould be watermarked, in case.
+	 *            this list is null or empty, all pages will be watermarked.
+	 * @throws IOException
+	 * @throws COSVisitorException
+	 */
+	public void putWatermark(String inputUri, String outputUri, String imageUri, List<Integer> pages)
+			throws IOException, COSVisitorException;
 }
