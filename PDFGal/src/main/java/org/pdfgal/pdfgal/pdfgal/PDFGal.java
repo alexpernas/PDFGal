@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.apache.pdfbox.exceptions.CryptographyException;
 import org.apache.pdfbox.pdmodel.encryption.BadSecurityHandlerException;
+import org.pdfgal.pdfgal.exceptions.WatermarkOutOfLengthException;
 import org.pdfgal.pdfgal.model.enumerated.WatermarkPosition;
 
 /**
@@ -28,8 +29,8 @@ public interface PDFGal {
 	 * @throws IOException
 	 * @throws COSVisitorException
 	 */
-	public void merge(List<String> inputUris, String outputUri) throws COSVisitorException,
-			IOException;
+	public void merge(List<String> inputUris, String outputUri)
+			throws COSVisitorException, IOException;
 
 	/**
 	 * This method splits PDFs. Parameter inputUri must contain the URI where
@@ -45,8 +46,8 @@ public interface PDFGal {
 	 * @throws IOException
 	 * @throws COSVisitorException
 	 */
-	public List<String> split(String inputUri, String outputUri, List<Integer> pages)
-			throws IOException, COSVisitorException;
+	public List<String> split(String inputUri, String outputUri,
+			List<Integer> pages) throws IOException, COSVisitorException;
 
 	/**
 	 * This method splits PDFs. Parameter inputUri must contain the URI where
@@ -62,8 +63,8 @@ public interface PDFGal {
 	 * @throws IOException
 	 * @throws COSVisitorException
 	 */
-	public List<String> split(String inputUri, String outputUri, Integer pages) throws IOException,
-			COSVisitorException;
+	public List<String> split(String inputUri, String outputUri, Integer pages)
+			throws IOException, COSVisitorException;
 
 	/**
 	 * This method password protects a PDF document. Parameter inputUri must
@@ -78,8 +79,9 @@ public interface PDFGal {
 	 * @throws BadSecurityHandlerException
 	 * @throws COSVisitorException
 	 */
-	public void protect(String inputUri, String outputUri, String password) throws IOException,
-			BadSecurityHandlerException, COSVisitorException;
+	public void protect(String inputUri, String outputUri, String password)
+			throws IOException, BadSecurityHandlerException,
+			COSVisitorException;
 
 	/**
 	 * This method eliminates password protection into a PDF document. Parameter
@@ -95,26 +97,34 @@ public interface PDFGal {
 	 * @throws CryptographyException
 	 * @throws BadSecurityHandlerException
 	 */
-	public void unProtect(String inputUri, String outputUri, String password) throws IOException,
-			COSVisitorException, BadSecurityHandlerException, CryptographyException;
+	public void unProtect(String inputUri, String outputUri, String password)
+			throws IOException, COSVisitorException,
+			BadSecurityHandlerException, CryptographyException;
 
 	/**
 	 * Puts a watermark in the document with the indicated text.
 	 * 
 	 * @param inputUri
 	 * @param outputUri
-	 * @param text Text for the watermark.
-	 * @param color Color of the watermark.
-	 * @param alpha Color opacity.
-	 * @param watermarkPosition Position of the watermark in the page.
-	 * @param pages A list with the pages that sould be watermarked, in case.
-	 *            this list is null or empty, all pages will be watermarked.
+	 * @param text
+	 *            Text for the watermark.
+	 * @param color
+	 *            Color of the watermark.
+	 * @param alpha
+	 *            Color opacity.
+	 * @param watermarkPosition
+	 *            Position of the watermark in the page.
+	 * @param pages
+	 *            A list with the pages that sould be watermarked, in case. this
+	 *            list is null or empty, all pages will be watermarked.
 	 * @throws IOException
 	 * @throws COSVisitorException
+	 * @throws WatermarkOutOfLengthException
 	 */
-	public void putWatermark(String inputUri, String outputUri, String text, Color color,
-			Float alpha, WatermarkPosition watermarkPosition, List<Integer> pages)
-			throws IOException, COSVisitorException;
+	public void putWatermark(String inputUri, String outputUri, String text,
+			Color color, Float alpha, WatermarkPosition watermarkPosition,
+			List<Integer> pages) throws IOException, COSVisitorException,
+			WatermarkOutOfLengthException;
 
 	/**
 	 * Puts a watermark in the document. The watermark is the image sent as
@@ -123,11 +133,13 @@ public interface PDFGal {
 	 * @param inputUri
 	 * @param outputUri
 	 * @param imageUri
-	 * @param pages A list with the pages that sould be watermarked, in case.
-	 *            this list is null or empty, all pages will be watermarked.
+	 * @param pages
+	 *            A list with the pages that sould be watermarked, in case. this
+	 *            list is null or empty, all pages will be watermarked.
 	 * @throws IOException
 	 * @throws COSVisitorException
 	 */
-	public void putWatermark(String inputUri, String outputUri, String imageUri, List<Integer> pages)
-			throws IOException, COSVisitorException;
+	public void putWatermark(String inputUri, String outputUri,
+			String imageUri, List<Integer> pages) throws IOException,
+			COSVisitorException;
 }

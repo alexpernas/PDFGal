@@ -440,8 +440,10 @@ public class PDFGalTest {
 
 	@Test
 	public void putWatermark() {
+		final String input = "IPutWatermarkTest.pdf";
+
 		final String inputUri = System.getProperty("user.dir") + TEST_RESOURCES
-				+ "putwatermark\\IPutWatermarkTest.pdf";
+				+ "putwatermark\\" + input;
 		final String outputUri = System.getProperty("user.dir")
 				+ TEST_RESOURCES + "putwatermark\\OPutWatermarkTest.pdf";
 		final String text = "Watermark";

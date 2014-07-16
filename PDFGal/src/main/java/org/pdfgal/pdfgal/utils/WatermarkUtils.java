@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
+import org.pdfgal.pdfgal.exceptions.WatermarkOutOfLengthException;
 import org.pdfgal.pdfgal.model.enumerated.WatermarkPosition;
 
 public interface WatermarkUtils {
@@ -27,8 +28,10 @@ public interface WatermarkUtils {
 	 * @param text
 	 * @param watermarkPosition
 	 * @throws IOException
+	 * @throws WatermarkOutOfLengthException
 	 */
-	public void addWatermark(PDDocument doc, PDPage page, Color color, String text,
-			WatermarkPosition watermarkPosition) throws IOException;
+	public void addWatermark(PDDocument doc, PDPage page, Color color,
+			String text, WatermarkPosition watermarkPosition)
+			throws IOException, WatermarkOutOfLengthException;
 
 }

@@ -11,7 +11,9 @@ import org.apache.pdfbox.pdmodel.PDResources;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.PDExtendedGraphicsState;
+import org.pdfgal.pdfgal.exceptions.WatermarkOutOfLengthException;
 import org.pdfgal.pdfgal.model.enumerated.WatermarkPosition;
+import org.pdfgal.pdfgal.utils.Constants;
 import org.pdfgal.pdfgal.utils.WatermarkUtils;
 import org.springframework.stereotype.Component;
 
@@ -43,10 +45,37 @@ public class WatermarkUtilsImpl implements WatermarkUtils {
 	@Override
 	public void addWatermark(final PDDocument doc, final PDPage page,
 			final Color color, final String text,
-			final WatermarkPosition watermarkPosition) throws IOException {
+			final WatermarkPosition watermarkPosition) throws IOException,
+			WatermarkOutOfLengthException {
 
 		if (doc != null && page != null && color != null
 				&& StringUtils.isNotBlank(text) && watermarkPosition != null) {
+
+			// Attributes are extrated from the watermarkPosition argument.
+			Double rotationAngle = 0D;
+			Double rotationTX = 0D;
+			Double rotationTY = 0D;
+			Integer maxLength = 0;
+
+			if (page.getMediaBox().getHeight() > page.getMediaBox().getWidth()) {
+				// Page is portrait
+				rotationAngle = watermarkPosition.getRotationAnglePortrait();
+				rotationTX = watermarkPosition.getRotationTXPortrait();
+				rotationTY = watermarkPosition.getRotationTYPortrait();
+				maxLength = watermarkPosition.getMaxLengthPortrait();
+			} else {
+				// Page is landscape
+				rotationAngle = watermarkPosition.getRotationAngleLandscape();
+				rotationTX = watermarkPosition.getRotationTXLandscape();
+				rotationTY = watermarkPosition.getRotationTYLandscape();
+				maxLength = watermarkPosition.getMaxLengthLandscape();
+			}
+
+			// In case text is too large, an exception is thrown.
+			if (text.length() > maxLength) {
+				throw new WatermarkOutOfLengthException(
+						Constants.WATERMARK_OUT_OF_LENGTH_EXCEPTION_MESSAGE);
+			}
 
 			final PDPageContentStream contentStream = new PDPageContentStream(
 					doc, page, true, true);
@@ -54,12 +83,10 @@ public class WatermarkUtilsImpl implements WatermarkUtils {
 			contentStream.setNonStrokingColor(color);
 			contentStream.beginText();
 			contentStream.setFont(PDType1Font.HELVETICA, 70);
-			contentStream.setTextRotation(watermarkPosition.getRotationAngle(),
-					watermarkPosition.getRotationTX(),
-					watermarkPosition.getRotationTY());
+			contentStream
+					.setTextRotation(rotationAngle, rotationTX, rotationTY);
 			// Text is centered
-			final Integer size = (watermarkPosition.getMaxLength() * 2)
-					- text.length();
+			final Integer size = (maxLength * 2) - text.length();
 			final String centeredText = StringUtils.center(text, size);
 			contentStream.drawString(centeredText);
 			contentStream.endText();

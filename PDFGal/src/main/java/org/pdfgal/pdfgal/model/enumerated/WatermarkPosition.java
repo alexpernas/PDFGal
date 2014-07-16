@@ -2,80 +2,99 @@ package org.pdfgal.pdfgal.model.enumerated;
 
 public enum WatermarkPosition {
 
-	CENTER(0D, 60D, 400D, 12), GOING_DOWN(-1D, 50D, 750D, 21), GOING_UP(1D, 100D, 60D, 21);
+	CENTER(0D, 60D, 400D, 12, 0D, 50D, 275D, 18),
 
-	private Double rotationAngle;
-	private Double rotationTX;
-	private Double rotationTY;
-	private Integer maxLength;
+	GOING_DOWN(-1D, 50D, 750D, 21, -0.55D, 50D, 490D, 21),
 
-	/**
-	 * @param rotationAngle
-	 * @param rotationTX
-	 * @param rotationTY
-	 * @param maxLength
-	 */
-	private WatermarkPosition(final Double rotationAngle, final Double rotationTX,
-			final Double rotationTY, final Integer maxLength) {
-		this.rotationAngle = rotationAngle;
-		this.rotationTX = rotationTX;
-		this.rotationTY = rotationTY;
-		this.maxLength = maxLength;
+	GOING_UP(1D, 100D, 60D, 21, 0.58D, 80D, 50D, 21);
+
+	private Double rotationAnglePortrait;
+	private Double rotationTXPortrait;
+	private Double rotationTYPortrait;
+	private Integer maxLengthPortrait;
+	private Double rotationAngleLandscape;
+	private Double rotationTXLandscape;
+	private Double rotationTYLandscape;
+	private Integer maxLengthLandscape;
+
+	private WatermarkPosition(final Double rotationAnglePortrait,
+			final Double rotationTXPortrait, final Double rotationTYPortrait,
+			final Integer maxLengthPortrait,
+			final Double rotationAngleLandscape,
+			final Double rotationTXLandscape, final Double rotationTYLandscape,
+			final Integer maxLengthLandscape) {
+		this.rotationAnglePortrait = rotationAnglePortrait;
+		this.rotationTXPortrait = rotationTXPortrait;
+		this.rotationTYPortrait = rotationTYPortrait;
+		this.maxLengthPortrait = maxLengthPortrait;
+		this.rotationAngleLandscape = rotationAngleLandscape;
+		this.rotationTXLandscape = rotationTXLandscape;
+		this.rotationTYLandscape = rotationTYLandscape;
+		this.maxLengthLandscape = maxLengthLandscape;
 	}
 
-	/**
-	 * @return the rotationAngle
-	 */
-	public Double getRotationAngle() {
-		return this.rotationAngle;
+	public Double getRotationAnglePortrait() {
+		return this.rotationAnglePortrait;
 	}
 
-	/**
-	 * @param rotationAngle the rotationAngle to set
-	 */
-	public void setRotationAngle(final Double rotationAngle) {
-		this.rotationAngle = rotationAngle;
+	public void setRotationAnglePortrait(final Double rotationAnglePortrait) {
+		this.rotationAnglePortrait = rotationAnglePortrait;
 	}
 
-	/**
-	 * @return the rotationTX
-	 */
-	public Double getRotationTX() {
-		return this.rotationTX;
+	public Double getRotationTXPortrait() {
+		return this.rotationTXPortrait;
 	}
 
-	/**
-	 * @param rotationTX the rotationTX to set
-	 */
-	public void setRotationTX(final Double rotationTX) {
-		this.rotationTX = rotationTX;
+	public void setRotationTXPortrait(final Double rotationTXPortrait) {
+		this.rotationTXPortrait = rotationTXPortrait;
 	}
 
-	/**
-	 * @return the rotationTY
-	 */
-	public Double getRotationTY() {
-		return this.rotationTY;
+	public Double getRotationTYPortrait() {
+		return this.rotationTYPortrait;
 	}
 
-	/**
-	 * @param rotationTY the rotationTY to set
-	 */
-	public void setRotationTY(final Double rotationTY) {
-		this.rotationTY = rotationTY;
+	public void setRotationTYPortrait(final Double rotationTYPortrait) {
+		this.rotationTYPortrait = rotationTYPortrait;
 	}
 
-	/**
-	 * @return the maxLength
-	 */
-	public Integer getMaxLength() {
-		return this.maxLength;
+	public Integer getMaxLengthPortrait() {
+		return this.maxLengthPortrait;
 	}
 
-	/**
-	 * @param maxLength the maxLength to set
-	 */
-	public void setMaxLength(final Integer maxLength) {
-		this.maxLength = maxLength;
+	public void setMaxLengthPortrait(final Integer maxLengthPortrait) {
+		this.maxLengthPortrait = maxLengthPortrait;
 	}
+
+	public Double getRotationAngleLandscape() {
+		return this.rotationAngleLandscape;
+	}
+
+	public void setRotationAngleLandscape(final Double rotationAngleLandscape) {
+		this.rotationAngleLandscape = rotationAngleLandscape;
+	}
+
+	public Double getRotationTXLandscape() {
+		return this.rotationTXLandscape;
+	}
+
+	public void setRotationTXLandscape(final Double rotationTXLandscape) {
+		this.rotationTXLandscape = rotationTXLandscape;
+	}
+
+	public Double getRotationTYLandscape() {
+		return this.rotationTYLandscape;
+	}
+
+	public void setRotationTYLandscape(final Double rotationTYLandscape) {
+		this.rotationTYLandscape = rotationTYLandscape;
+	}
+
+	public Integer getMaxLengthLandscape() {
+		return this.maxLengthLandscape;
+	}
+
+	public void setMaxLengthLandscape(final Integer maxLengthLandscape) {
+		this.maxLengthLandscape = maxLengthLandscape;
+	}
+
 }
