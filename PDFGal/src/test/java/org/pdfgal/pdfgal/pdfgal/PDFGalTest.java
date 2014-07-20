@@ -3,17 +3,22 @@ package org.pdfgal.pdfgal.pdfgal;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.awt.Color;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.encryption.StandardDecryptionMaterial;
 import org.apache.pdfbox.util.PDFTextStripper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.pdfgal.pdfgal.model.PDFGalBookmark;
 import org.pdfgal.pdfgal.model.enumerated.WatermarkPosition;
+import org.pdfgal.pdfgal.model.vo.PDFGalBookmarkVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -459,5 +464,57 @@ public class PDFGalTest {
 			assertFalse(true);
 		}
 	}
+
+	@Test
+	public void addBookmarks() {
+
+		final String inputUri = System.getProperty("user.dir") + TEST_RESOURCES
+				+ "addbookmarks\\IAddBookmarksTest.pdf";
+		final String outputUri = System.getProperty("user.dir")
+				+ TEST_RESOURCES + "addbookmarks\\OAddBookmarksTest.pdf";
+
+		final String title = "Chapters";
+
+		final List<PDFGalBookmark> pdfGalBookmarksList = new ArrayList<PDFGalBookmark>();
+
+		final PDFGalBookmark bookmark1 = new PDFGalBookmarkVO(1, "Page 1");
+		final PDFGalBookmark bookmark3 = new PDFGalBookmarkVO(3,
+				"This is the third page");
+		final PDFGalBookmark bookmark5 = new PDFGalBookmarkVO(5,
+				"Page five should be this one");
+
+		pdfGalBookmarksList.add(bookmark1);
+		pdfGalBookmarksList.add(bookmark3);
+		pdfGalBookmarksList.add(bookmark5);
+
+		try {
+			this.pdfGal.addBookmarks(inputUri, outputUri, title,
+					pdfGalBookmarksList);
+		} catch (COSVisitorException | IOException e) {
+			fail();
+		}
+	}
+
+	// @Test
+	// public void putWatermarkImage() {
+	// final String input = "IPutWatermarkImageTest.pdf";
+	//
+	// final String inputUri = System.getProperty("user.dir") + TEST_RESOURCES
+	// + "putwatermarkimage\\" + input;
+	// final String outputUri = System.getProperty("user.dir")
+	// + TEST_RESOURCES
+	// + "putwatermarkimage\\OPutWatermarkImageTest.pdf";
+	// final String imageUri = System.getProperty("user.dir") + TEST_RESOURCES
+	// + "putwatermarkimage\\imaxejpg.jpg";
+	// final Float alpha = 0.5F;
+	// final List<Integer> pages = new ArrayList<Integer>();
+	//
+	// try {
+	// this.pdfGal.putWatermark(inputUri, outputUri, imageUri, alpha,
+	// pages);
+	// } catch (final Exception e) {
+	// assertFalse(true);
+	// }
+	// }
 
 }

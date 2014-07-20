@@ -8,6 +8,7 @@ import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.apache.pdfbox.exceptions.CryptographyException;
 import org.apache.pdfbox.pdmodel.encryption.BadSecurityHandlerException;
 import org.pdfgal.pdfgal.exceptions.WatermarkOutOfLengthException;
+import org.pdfgal.pdfgal.model.PDFGalBookmark;
 import org.pdfgal.pdfgal.model.enumerated.WatermarkPosition;
 
 /**
@@ -127,19 +128,34 @@ public interface PDFGal {
 			WatermarkOutOfLengthException;
 
 	/**
-	 * Puts a watermark in the document. The watermark is the image sent as
-	 * argument.
+	 * This method creates the indicated bookmarks for the input PDF.
 	 * 
 	 * @param inputUri
 	 * @param outputUri
-	 * @param imageUri
-	 * @param pages
-	 *            A list with the pages that sould be watermarked, in case. this
-	 *            list is null or empty, all pages will be watermarked.
+	 * @param title
+	 *            Title for the bookmarks list.
+	 * @param pdfGalBookmarksList
 	 * @throws IOException
 	 * @throws COSVisitorException
 	 */
-	public void putWatermark(String inputUri, String outputUri,
-			String imageUri, List<Integer> pages) throws IOException,
+	public void addBookmarks(String inputUri, String outputUri, String title,
+			List<PDFGalBookmark> pdfGalBookmarksList) throws IOException,
 			COSVisitorException;
+
+	// /**
+	// * Puts a watermark in the document. The watermark is the image sent as
+	// * argument.
+	// *
+	// * @param inputUri
+	// * @param outputUri
+	// * @param imageUri
+	// * @param pages
+	// * A list with the pages that sould be watermarked, in case. this
+	// * list is null or empty, all pages will be watermarked.
+	// * @throws IOException
+	// * @throws COSVisitorException
+	// */
+	// public void putWatermark(String inputUri, String outputUri,
+	// String imageUri, Float alpha, List<Integer> pages)
+	// throws IOException, COSVisitorException;
 }

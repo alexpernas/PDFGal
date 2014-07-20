@@ -1,13 +1,9 @@
 package org.pdfgal.pdfgal.pdfgal.impl;
 
 import java.awt.Color;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.imageio.ImageIO;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -15,17 +11,18 @@ import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.apache.pdfbox.exceptions.CryptographyException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.encryption.AccessPermission;
 import org.apache.pdfbox.pdmodel.encryption.BadSecurityHandlerException;
 import org.apache.pdfbox.pdmodel.encryption.DecryptionMaterial;
 import org.apache.pdfbox.pdmodel.encryption.StandardDecryptionMaterial;
 import org.apache.pdfbox.pdmodel.encryption.StandardProtectionPolicy;
-import org.apache.pdfbox.pdmodel.graphics.xobject.PDPixelMap;
-import org.apache.pdfbox.pdmodel.graphics.xobject.PDXObjectImage;
+import org.apache.pdfbox.pdmodel.interactive.documentnavigation.destination.PDPageFitWidthDestination;
+import org.apache.pdfbox.pdmodel.interactive.documentnavigation.outline.PDDocumentOutline;
+import org.apache.pdfbox.pdmodel.interactive.documentnavigation.outline.PDOutlineItem;
 import org.apache.pdfbox.util.PDFMergerUtility;
 import org.apache.pdfbox.util.Splitter;
 import org.pdfgal.pdfgal.exceptions.WatermarkOutOfLengthException;
+import org.pdfgal.pdfgal.model.PDFGalBookmark;
 import org.pdfgal.pdfgal.model.enumerated.WatermarkPosition;
 import org.pdfgal.pdfgal.pdfgal.PDFGal;
 import org.pdfgal.pdfgal.utils.Constants;
@@ -272,60 +269,107 @@ public class PDFGalImpl implements PDFGal {
 		}
 	}
 
-	// TODO Comprobar o das marcas de auga para documentos en horizontal tal...
-
 	@Override
-	public void putWatermark(final String inputUri, final String outputUri,
-			final String imageUri, final List<Integer> pages)
+	public void addBookmarks(final String inputUri, final String outputUri,
+			final String title, final List<PDFGalBookmark> pdfGalBookmarksList)
 			throws IOException, COSVisitorException {
-		// TODO Engadir alpha?
-		// TODO Auto-generated method stub
+
 		if (StringUtils.isNotBlank(inputUri)
 				&& StringUtils.isNotBlank(outputUri)
-				&& StringUtils.isNotBlank(imageUri)) {
+				&& StringUtils.isNotEmpty(title)
+				&& CollectionUtils.isNotEmpty(pdfGalBookmarksList)) {
 
 			final PDDocument doc = PDDocument.load(inputUri);
-			final List<?> allPages = doc.getDocumentCatalog().getAllPages();
 
-			this.converterUtils.deleteNonSelectedPositions(allPages, pages);
+			final PDDocumentOutline outline = new PDDocumentOutline();
+			doc.getDocumentCatalog().setDocumentOutline(outline);
+			final PDOutlineItem pagesOutline = new PDOutlineItem();
+			pagesOutline.setTitle(title);
+			@SuppressWarnings("unchecked")
+			final List<PDPage> pages = doc.getDocumentCatalog().getAllPages();
+			outline.appendChild(pagesOutline);
 
-			// Convert the image to TYPE_4BYTE_ABGR so PDFBox won't throw
-			// exceptions (e.g. for transparent png's).
-			// TODO Controlar tamanho de imaxe
-			final BufferedImage tmp_image = ImageIO.read(new File(imageUri));
-			final BufferedImage image = new BufferedImage(tmp_image.getWidth(),
-					tmp_image.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
-
-			image.createGraphics().drawRenderedImage(tmp_image, null);
-
-			final PDXObjectImage pdxObjectImage = new PDPixelMap(doc, image);
-
-			if (CollectionUtils.isNotEmpty(allPages)) {
-				for (final Object object : allPages) {
-
-					final PDPage page = (PDPage) object;
-
-					final PDPageContentStream contentStream = new PDPageContentStream(
-							doc, page, true, true);
-
-					// TODO Utilizar drawImage para indicar a posición???
-					contentStream.drawXObject(pdxObjectImage, null);
-
-					// contentStream.drawXObject(ximage, x, y, ximage.getWidth()
-					// *
-					// scale, ximage.getHeight()
-					// * scale);
-
-					contentStream.close();
+			for (final PDFGalBookmark pdfGalBookmark : pdfGalBookmarksList) {
+				if (pdfGalBookmark != null && pdfGalBookmark.isInitializated()) {
+					final PDPage page = pages.get(pdfGalBookmark.getPage() - 1);
+					final PDPageFitWidthDestination dest = new PDPageFitWidthDestination();
+					dest.setPage(page);
+					final PDOutlineItem bookmark = new PDOutlineItem();
+					bookmark.setDestination(dest);
+					bookmark.setTitle(pdfGalBookmark.getText());
+					pagesOutline.appendChild(bookmark);
 				}
 			}
+			pagesOutline.openNode();
+			outline.openNode();
 
 			doc.save(outputUri);
-			doc.close();
 
 		} else {
 			throw new IllegalArgumentException(
 					Constants.ILLEGAL_ARGUMENT_EXCEPTION_MESSAGE);
 		}
 	}
+
+	// @Override
+	// public void putWatermark(final String inputUri, final String outputUri,
+	// final String imageUri, final Float alpha, final List<Integer> pages)
+	// throws IOException, COSVisitorException {
+	//
+	// if (StringUtils.isNotBlank(inputUri)
+	// && StringUtils.isNotBlank(outputUri)
+	// && StringUtils.isNotBlank(imageUri) && alpha != null) {
+	//
+	// final PDDocument doc = PDDocument.load(inputUri);
+	// final List<?> allPages = doc.getDocumentCatalog().getAllPages();
+	//
+	// this.converterUtils.deleteNonSelectedPositions(allPages, pages);
+	//
+	// // Convert the image to TYPE_4BYTE_ABGR so PDFBox won't throw
+	// // exceptions (e.g. for transparent png's).
+	// // TODO Controlar tamanho de imaxe
+	// final BufferedImage tmp_image = ImageIO.read(new File(imageUri));
+	// final BufferedImage image = new BufferedImage(tmp_image.getWidth(),
+	// tmp_image.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
+	//
+	// image.createGraphics().drawRenderedImage(tmp_image, null);
+	//
+	// final Graphics2D g2d = (Graphics2D) image.getGraphics();
+	// g2d.setComposite(AlphaComposite.SrcOver.derive(alpha));
+	// g2d.drawImage(image, 0, 0, null);
+	//
+	// final PDXObjectImage pdxObjectImage = new PDPixelMap(doc, image);
+	//
+	// if (CollectionUtils.isNotEmpty(allPages)) {
+	// for (final Object object : allPages) {
+	//
+	// final PDPage page = (PDPage) object;
+	//
+	// final PDPageContentStream contentStream = new PDPageContentStream(
+	// doc, page, true, true);
+	//
+	// // TODO Utilizar drawImage para indicar a posición???
+	// // contentStream.drawXObject(pdxObjectImage,
+	// // new AffineTransform());
+	// contentStream.drawXObject(pdxObjectImage, 0, 0,
+	// pdxObjectImage.getWidth(),
+	// pdxObjectImage.getHeight());
+	//
+	// // contentStream.drawXObject(ximage, x, y, ximage.getWidth()
+	// // *
+	// // scale, ximage.getHeight()
+	// // * scale);
+	//
+	// contentStream.close();
+	// }
+	// }
+	//
+	// doc.save(outputUri);
+	// doc.close();
+	//
+	// } else {
+	// throw new IllegalArgumentException(
+	// Constants.ILLEGAL_ARGUMENT_EXCEPTION_MESSAGE);
+	// }
+	// }
 }
