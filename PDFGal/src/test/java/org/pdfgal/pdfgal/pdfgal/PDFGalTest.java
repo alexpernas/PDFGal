@@ -495,6 +495,24 @@ public class PDFGalTest {
 		}
 	}
 
+	@Test
+	public void reIndexPageNumbers() {
+
+		final String inputUri = System.getProperty("user.dir") + TEST_RESOURCES
+				+ "reindexpagenumbers\\IReIndexPageNumbersTest.pdf";
+		final String outputUri = System.getProperty("user.dir")
+				+ TEST_RESOURCES
+				+ "reindexpagenumbers\\OReIndexPageNumbersTest.pdf";
+
+		final Integer pageNumber = 5;
+
+		try {
+			this.pdfGal.reIndexPageNumbers(inputUri, outputUri, pageNumber);
+		} catch (COSVisitorException | IOException e) {
+			fail();
+		}
+	}
+
 	// @Test
 	// public void putWatermarkImage() {
 	// final String input = "IPutWatermarkImageTest.pdf";

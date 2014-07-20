@@ -11,6 +11,7 @@ import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.apache.pdfbox.exceptions.CryptographyException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.common.PDPageLabels;
 import org.apache.pdfbox.pdmodel.encryption.AccessPermission;
 import org.apache.pdfbox.pdmodel.encryption.BadSecurityHandlerException;
 import org.apache.pdfbox.pdmodel.encryption.DecryptionMaterial;
@@ -304,6 +305,7 @@ public class PDFGalImpl implements PDFGal {
 			outline.openNode();
 
 			doc.save(outputUri);
+			doc.close();
 
 		} else {
 			throw new IllegalArgumentException(
@@ -311,6 +313,27 @@ public class PDFGalImpl implements PDFGal {
 		}
 	}
 
+	@Override
+	public void reIndexPageNumbers(final String inputUri,
+			final String outputUri, final Integer pageNumber)
+			throws IOException, COSVisitorException {
+
+		if (StringUtils.isNotBlank(inputUri)
+				&& StringUtils.isNotBlank(outputUri) && pageNumber != null) {
+
+			final PDDocument doc = PDDocument.load(inputUri);
+
+			final PDPageLabels pagesLabels = doc.getDocumentCatalog()
+					.getPageLabels();
+
+			doc.save(outputUri);
+			doc.close();
+
+		} else {
+			throw new IllegalArgumentException(
+					Constants.ILLEGAL_ARGUMENT_EXCEPTION_MESSAGE);
+		}
+	}
 	// @Override
 	// public void putWatermark(final String inputUri, final String outputUri,
 	// final String imageUri, final Float alpha, final List<Integer> pages)

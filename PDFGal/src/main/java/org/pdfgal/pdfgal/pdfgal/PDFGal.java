@@ -142,6 +142,20 @@ public interface PDFGal {
 			List<PDFGalBookmark> pdfGalBookmarksList) throws IOException,
 			COSVisitorException;
 
+	/**
+	 * This method reindex page numbers. New numbers shall be roman up to
+	 * pageNumber argument - 1 and arabic number from pageNumber argument up to
+	 * the last page.
+	 * 
+	 * @param inputUri
+	 * @param outputUri
+	 * @param pageNumber
+	 * @throws IOException
+	 * @throws COSVisitorException
+	 */
+	public void reIndexPageNumbers(String inputUri, String outputUri,
+			Integer pageNumber) throws IOException, COSVisitorException;
+
 	// /**
 	// * Puts a watermark in the document. The watermark is the image sent as
 	// * argument.
