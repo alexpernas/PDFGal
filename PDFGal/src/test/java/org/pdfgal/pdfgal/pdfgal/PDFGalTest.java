@@ -454,7 +454,7 @@ public class PDFGalTest {
 		final Color color = Color.gray;
 		final Float alpha = 0.2F;
 		final List<Integer> pages = new ArrayList<Integer>();
-		final WatermarkPosition watermarkPosition = WatermarkPosition.GOING_UP;
+		final WatermarkPosition watermarkPosition = WatermarkPosition.BOTTOM_UP;
 
 		try {
 			this.pdfGal.putWatermark(inputUri, outputUri, text, color, alpha, watermarkPosition,

@@ -4,9 +4,9 @@ public enum WatermarkPosition {
 
 	CENTER(0D, 60D, 400D, 12, 0D, 50D, 275D, 18),
 
-	GOING_DOWN(-1D, 50D, 750D, 21, -0.55D, 50D, 490D, 21),
+	BOTTOM_UP(1D, 100D, 60D, 21, 0.58D, 80D, 50D, 21),
 
-	GOING_UP(1D, 100D, 60D, 21, 0.58D, 80D, 50D, 21);
+	TOP_DOWN(-1D, 50D, 750D, 21, -0.55D, 50D, 490D, 21);
 
 	private Double rotationAnglePortrait;
 	private Double rotationTXPortrait;
@@ -17,12 +17,10 @@ public enum WatermarkPosition {
 	private Double rotationTYLandscape;
 	private Integer maxLengthLandscape;
 
-	private WatermarkPosition(final Double rotationAnglePortrait,
-			final Double rotationTXPortrait, final Double rotationTYPortrait,
-			final Integer maxLengthPortrait,
-			final Double rotationAngleLandscape,
-			final Double rotationTXLandscape, final Double rotationTYLandscape,
-			final Integer maxLengthLandscape) {
+	private WatermarkPosition(final Double rotationAnglePortrait, final Double rotationTXPortrait,
+			final Double rotationTYPortrait, final Integer maxLengthPortrait,
+			final Double rotationAngleLandscape, final Double rotationTXLandscape,
+			final Double rotationTYLandscape, final Integer maxLengthLandscape) {
 		this.rotationAnglePortrait = rotationAnglePortrait;
 		this.rotationTXPortrait = rotationTXPortrait;
 		this.rotationTYPortrait = rotationTYPortrait;
