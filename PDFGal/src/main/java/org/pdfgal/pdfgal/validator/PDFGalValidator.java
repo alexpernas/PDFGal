@@ -26,4 +26,12 @@ public interface PDFGalValidator {
 	 */
 	public boolean isEncrypted(String path);
 
+	/**
+	 * This method returns true when every page in the document is landscape,
+	 * otherwise it returns false;
+	 * 
+	 * @return
+	 */
+	public boolean allLandscape(String path);
+
 }
