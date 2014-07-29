@@ -1,3 +1,21 @@
+/*
+ * PDFGal
+ * Copyright (c) 2014, Alejandro Pernas Pan, All rights reserved.
+ * 
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3.0 of the License, or (at your option) any later version.
+
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.
+ */
+
 package org.pdfgal.pdfgal.utils.impl;
 
 import java.awt.Color;
@@ -36,20 +54,18 @@ public class WatermarkUtilsImpl implements WatermarkUtils {
 			final Map<String, PDExtendedGraphicsState> graphicsStateDictionary = resources
 					.getGraphicsStates();
 
-			graphicsStateDictionary.put("TransparentState",
-					extendedGraphicsState);
+			graphicsStateDictionary.put("TransparentState", extendedGraphicsState);
 			resources.setGraphicsStates(graphicsStateDictionary);
 		}
 	}
 
 	@Override
-	public void addWatermark(final PDDocument doc, final PDPage page,
-			final Color color, final String text,
-			final WatermarkPosition watermarkPosition) throws IOException,
+	public void addWatermark(final PDDocument doc, final PDPage page, final Color color,
+			final String text, final WatermarkPosition watermarkPosition) throws IOException,
 			WatermarkOutOfLengthException {
 
-		if (doc != null && page != null && color != null
-				&& StringUtils.isNotBlank(text) && watermarkPosition != null) {
+		if (doc != null && page != null && color != null && StringUtils.isNotBlank(text)
+				&& watermarkPosition != null) {
 
 			// Attributes are extrated from the watermarkPosition argument.
 			Double rotationAngle = 0D;
@@ -77,14 +93,12 @@ public class WatermarkUtilsImpl implements WatermarkUtils {
 						Constants.WATERMARK_OUT_OF_LENGTH_EXCEPTION_MESSAGE);
 			}
 
-			final PDPageContentStream contentStream = new PDPageContentStream(
-					doc, page, true, true);
+			final PDPageContentStream contentStream = new PDPageContentStream(doc, page, true, true);
 			contentStream.appendRawCommands("/TransparentState gs\n");
 			contentStream.setNonStrokingColor(color);
 			contentStream.beginText();
 			contentStream.setFont(PDType1Font.HELVETICA, 70);
-			contentStream
-					.setTextRotation(rotationAngle, rotationTX, rotationTY);
+			contentStream.setTextRotation(rotationAngle, rotationTX, rotationTY);
 			// Text is centered
 			final Integer size = (maxLength * 2) - text.length();
 			final String centeredText = StringUtils.center(text, size);

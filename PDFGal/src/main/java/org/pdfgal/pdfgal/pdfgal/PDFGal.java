@@ -1,3 +1,21 @@
+/*
+ * PDFGal
+ * Copyright (c) 2014, Alejandro Pernas Pan, All rights reserved.
+ * 
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3.0 of the License, or (at your option) any later version.
+
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library.
+ */
+
 package org.pdfgal.pdfgal.pdfgal;
 
 import java.awt.Color;
@@ -31,8 +49,8 @@ public interface PDFGal {
 	 * @throws IOException
 	 * @throws COSVisitorException
 	 */
-	public void merge(List<String> inputUris, String outputUri)
-			throws COSVisitorException, IOException;
+	public void merge(List<String> inputUris, String outputUri) throws COSVisitorException,
+			IOException;
 
 	/**
 	 * This method splits PDFs. Parameter inputUri must contain the URI where
@@ -48,8 +66,8 @@ public interface PDFGal {
 	 * @throws IOException
 	 * @throws COSVisitorException
 	 */
-	public List<String> split(String inputUri, String outputUri,
-			List<Integer> pages) throws IOException, COSVisitorException;
+	public List<String> split(String inputUri, String outputUri, List<Integer> pages)
+			throws IOException, COSVisitorException;
 
 	/**
 	 * This method splits PDFs. Parameter inputUri must contain the URI where
@@ -65,8 +83,8 @@ public interface PDFGal {
 	 * @throws IOException
 	 * @throws COSVisitorException
 	 */
-	public List<String> split(String inputUri, String outputUri, Integer pages)
-			throws IOException, COSVisitorException;
+	public List<String> split(String inputUri, String outputUri, Integer pages) throws IOException,
+			COSVisitorException;
 
 	/**
 	 * This method password protects a PDF document. Parameter inputUri must
@@ -81,9 +99,8 @@ public interface PDFGal {
 	 * @throws BadSecurityHandlerException
 	 * @throws COSVisitorException
 	 */
-	public void protect(String inputUri, String outputUri, String password)
-			throws IOException, BadSecurityHandlerException,
-			COSVisitorException;
+	public void protect(String inputUri, String outputUri, String password) throws IOException,
+			BadSecurityHandlerException, COSVisitorException;
 
 	/**
 	 * This method eliminates password protection into a PDF document. Parameter
@@ -99,49 +116,40 @@ public interface PDFGal {
 	 * @throws CryptographyException
 	 * @throws BadSecurityHandlerException
 	 */
-	public void unProtect(String inputUri, String outputUri, String password)
-			throws IOException, COSVisitorException,
-			BadSecurityHandlerException, CryptographyException;
+	public void unProtect(String inputUri, String outputUri, String password) throws IOException,
+			COSVisitorException, BadSecurityHandlerException, CryptographyException;
 
 	/**
 	 * Puts a watermark in the document with the indicated text.
 	 * 
 	 * @param inputUri
 	 * @param outputUri
-	 * @param text
-	 *            Text for the watermark.
-	 * @param color
-	 *            Color of the watermark.
-	 * @param alpha
-	 *            Color opacity.
-	 * @param watermarkPosition
-	 *            Position of the watermark in the page.
-	 * @param pages
-	 *            A list with the pages that sould be watermarked, in case. this
-	 *            list is null or empty, all pages will be watermarked.
+	 * @param text Text for the watermark.
+	 * @param color Color of the watermark.
+	 * @param alpha Color opacity.
+	 * @param watermarkPosition Position of the watermark in the page.
+	 * @param pages A list with the pages that sould be watermarked, in case.
+	 *            this list is null or empty, all pages will be watermarked.
 	 * @throws IOException
 	 * @throws COSVisitorException
 	 * @throws WatermarkOutOfLengthException
 	 */
-	public void putWatermark(String inputUri, String outputUri, String text,
-			Color color, Float alpha, WatermarkPosition watermarkPosition,
-			List<Integer> pages) throws IOException, COSVisitorException,
-			WatermarkOutOfLengthException;
+	public void putWatermark(String inputUri, String outputUri, String text, Color color,
+			Float alpha, WatermarkPosition watermarkPosition, List<Integer> pages)
+			throws IOException, COSVisitorException, WatermarkOutOfLengthException;
 
 	/**
 	 * This method creates the indicated bookmarks for the input PDF.
 	 * 
 	 * @param inputUri
 	 * @param outputUri
-	 * @param title
-	 *            Title for the bookmarks list.
+	 * @param title Title for the bookmarks list.
 	 * @param pdfGalBookmarksList
 	 * @throws IOException
 	 * @throws COSVisitorException
 	 */
 	public void addBookmarks(String inputUri, String outputUri, String title,
-			List<PDFGalBookmark> pdfGalBookmarksList) throws IOException,
-			COSVisitorException;
+			List<PDFGalBookmark> pdfGalBookmarksList) throws IOException, COSVisitorException;
 
 	/**
 	 * This method reindex page numbers as indicated in pdfGalPageNumberingList
@@ -156,6 +164,6 @@ public interface PDFGal {
 	 * @throws COSVisitorException
 	 */
 	public void reIndexPageNumbers(String inputUri, String outputUri,
-			final List<PDFGalPageNumbering> pdfGalPageNumberingList)
-			throws IOException, COSVisitorException;
+			final List<PDFGalPageNumbering> pdfGalPageNumberingList) throws IOException,
+			COSVisitorException;
 }
